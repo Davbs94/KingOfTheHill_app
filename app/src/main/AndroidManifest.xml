@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.example.david.kingofthehill_app" >
+
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="com.google.android.providers.gsf.permission.READ_GSERVICES" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_LOCATION_EXTRA_COMMANDS" />
+    <uses-permission android:name="android.permission.READ_LOGS" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+
+    <application
+        android:allowBackup="true"
+        android:icon="@mipmap/icono"
+        android:label="@string/app_name"
+        android:theme="@style/AppTheme" >
+        <activity
+            android:name=".Register"
+            android:label="@string/app_name" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".Login"
+            android:label="@string/title_activity_login" >
+        </activity>
+        <activity
+            android:name=".forgot_password"
+            android:label="@string/title_activity_forgot_password" >
+        </activity>
+        <activity
+            android:name=".formulario"
+            android:label="@string/title_activity_formulario" >
+        </activity>
+        <activity
+            android:name=".Webview"
+            android:label="@string/title_activity_webview" >
+        </activity>
+        <activity
+            android:name=".Game"
+            android:label="@string/title_activity_game" >
+        </activity>
+        <activity
+            android:name=".Pelea_sable"
+            android:label="@string/title_activity_pelea_sable" >
+        </activity>
+        <activity
+            android:name=".Escuelas"
+            android:label="@string/title_activity_escuelas" >
+        </activity>
+    </application>
+
+</manifest>

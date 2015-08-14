@@ -9,13 +9,14 @@ import java.security.NoSuchAlgorithmException;
  * hasheo de la clave
  */
 public class Clave {
-    private String Hash;
+    //private String _Hash;
 
-    public Clave(String Hash) {
-        this.Hash = Hash;
+    public Clave() {
+
+
     }
 
-    public String MD5_Hash() {
+    public String MD5_Hash(String pClave) {
         MessageDigest m = null;
 
         try {
@@ -24,7 +25,7 @@ public class Clave {
             e.printStackTrace();
         }
 
-        m.update(Hash.getBytes(),0,Hash.length());
+        m.update(pClave.getBytes(), 0, pClave.length());
         String hash = new BigInteger(1, m.digest()).toString(16);
         return hash;
     }

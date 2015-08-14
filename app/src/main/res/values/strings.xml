@@ -10,4 +10,11 @@
     <string name="title_activity_game">Game</string>
     <string name="title_activity_pelea_sable">Pelea_sable</string>
     <string name="title_activity_escuelas">Escuelas</string>
+    <string name="title_activity_main">main</string>
+
+<!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="title_activity_juego">Map</string>
+    <string name="title_activity_mapa">Map</string>
+    <string name="title_activity_maps">Map</string>
 </resources>

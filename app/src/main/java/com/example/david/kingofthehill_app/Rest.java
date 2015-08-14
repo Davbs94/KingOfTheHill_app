@@ -23,50 +23,32 @@ import java.security.NoSuchAlgorithmException;
  * Clase para administracion de REST
  */
 public class Rest {
-    private String url;
 
-    public Rest(String url) {
-        this.url=url;
+    private final String _Registrar="http://192.168.1.135:8080/KingOfTheHill/webresources/users/register";
+    private final String _Login="http://192.168.1.135:8080/KingOfTheHill/webresources/users/login";
+    private final String _Forgot="http://192.168.1.135:8080/KingOfTheHill/webresources/users/forgotpassword";
+    private final String _NewPass="http://192.168.1.135:8080/KingOfTheHill/webresources/users/setpassword";
+    private final String _Logout="http://192.168.1.135:8080/KingOfTheHill/webresources/users/logout";
+    private final String _Battle="http://192.168.1.135:8080/KingOfTheHill/webresources/mobile/checkBattle";
+    private final String _SendPos="http://192.168.135:8080/KingOfTheHill/webresources/mobile/send-position";
+
+    public Rest() {
+
     }
 
     /**
      * Metodo encargado de solicitar los json
-     *
+     * @param pUrl
      * @return String
      */
 
-    public String getContent() {
+    public String getContent(String pUrl) {
         HttpClient httpclient = new DefaultHttpClient();
         String result = null;
-        HttpGet httpget = new HttpGet(url);
+        HttpGet httpget = new HttpGet(pUrl);
         HttpResponse response = null;
         InputStream instream = null;
         try {
-            response = httpclient.execute(httpget);
-            HttpEntity entity = response.getEntity();
-            if (entity != null) {
-                instream = entity.getContent();
-                result = convertStreamToString(instream);
-            }
-        } catch (Exception e) {
-        } finally {
-            if (instream != null) {
-                try {
-                    instream.close();
-                } catch (Exception exc) {
-                }
-            }
-        }
-        return result;
-    }
-    public String logout(String token) {
-        HttpClient httpclient = new DefaultHttpClient();
-        String result = null;
-        HttpGet httpget = new HttpGet(url);
-        HttpResponse response = null;
-        InputStream instream = null;
-        try {
-            httpget.addHeader("userToken", token);
             response = httpclient.execute(httpget);
             HttpEntity entity = response.getEntity();
             if (entity != null) {
@@ -85,7 +67,48 @@ public class Rest {
         return result;
     }
 
-    public String postContent(JSONObject json) throws JSONException, IOException {
+    /**
+     * Envia token
+     * @param pUrl
+     * @param pToken
+     * @return
+     */
+    public String sendToken(String pUrl, String pToken) {
+        HttpClient httpclient = new DefaultHttpClient();
+        String result = null;
+        HttpGet httpget = new HttpGet(pUrl);
+        HttpResponse response = null;
+        InputStream instream = null;
+        try {
+            httpget.addHeader("userToken", pToken);
+            response = httpclient.execute(httpget);
+            HttpEntity entity = response.getEntity();
+            if (entity != null) {
+                instream = entity.getContent();
+                result = convertStreamToString(instream);
+            }
+        } catch (Exception e) {
+        } finally {
+            if (instream != null) {
+                try {
+                    instream.close();
+                } catch (Exception exc) {
+                }
+            }
+        }
+        return result;
+    }
+
+
+    /**
+     * Metodo para post
+     * @param pUrl
+     * @param pJson
+     * @return respuesta
+     * @throws JSONException
+     * @throws IOException
+     */
+    public String postContent(String pUrl, JSONObject pJson) throws JSONException, IOException {
 
         HttpClient httpclient = new DefaultHttpClient();
         String result = null;
@@ -93,8 +116,8 @@ public class Rest {
         try {
             //httppost.addHeader("access_token", "FuckingToken");
             //httppost.addHeader("expires_int", "3600");
-            HttpPost httppost = new HttpPost(url);
-            StringEntity params = new StringEntity(json.toString());
+            HttpPost httppost = new HttpPost(pUrl);
+            StringEntity params = new StringEntity(pJson.toString());
             httppost.addHeader("content-type", "application/json");
             httppost.setEntity(params);
             HttpResponse httpResponse = httpclient.execute(httppost);
@@ -119,23 +142,24 @@ public class Rest {
 
     /**
      * Metodo de post con token para usuarios.
-     * @param json
-     * @param token
-     * @return String
+     * @param pUrl
+     * @param pJson
+     * @param pToken
+     * @return respuesta
      * @throws JSONException
      * @throws IOException
      */
-    public String postContentUser(JSONObject json,String token) throws JSONException, IOException {
+    public String postContentUser(String pUrl, JSONObject pJson,String pToken) throws JSONException, IOException {
 
         HttpClient httpclient = new DefaultHttpClient();
         String result = null;
         InputStream instream = null;
         try {
 
-            HttpPost httppost = new HttpPost(url);
-            StringEntity params = new StringEntity(json.toString());
+            HttpPost httppost = new HttpPost(pUrl);
+            StringEntity params = new StringEntity(pJson.toString());
             httppost.addHeader("content-type", "application/json");
-            httppost.addHeader("userToken", token);
+            httppost.addHeader("userToken", pToken);
             //httppost.addHeader("expiresIn", "3600");
             httppost.setEntity(params);
             HttpResponse httpResponse = httpclient.execute(httppost);
@@ -151,11 +175,11 @@ public class Rest {
     }
     /**
      * Convierte la informacion en un String utilizable
-     * @param is
+     * @param pIs
      * @return String
      */
-    public String convertStreamToString(InputStream is) {
-        BufferedReader reader = new BufferedReader(new InputStreamReader(is));
+    public String convertStreamToString(InputStream pIs) {
+        BufferedReader reader = new BufferedReader(new InputStreamReader(pIs));
         StringBuilder sb = new StringBuilder();
         String line = null;
         try {
@@ -165,7 +189,7 @@ public class Rest {
         } catch (IOException e) {
         } finally {
             try {
-                is.close();
+                pIs.close();
             } catch (IOException e) {
             }
         }
@@ -173,11 +197,67 @@ public class Rest {
     }
 
     /**
+     *
+     * @return _Login
+     */
+    public String get_Login() {
+        return _Login;
+    }
+
+    /**
+     *
+     * @return _Registrar
+     */
+    public String get_Registrar() {
+        return _Registrar;
+    }
+
+    /**
+     *
+     * @return _Forgot
+     */
+    public String get_Forgot() {
+        return _Forgot;
+    }
+
+    /**
+     *
+     * @return _NewPass
+     */
+    public String get_NewPass() {
+        return _NewPass;
+    }
+
+    /**
+     *
+     * @return _Logout
+     */
+    public String get_Logout() {
+        return _Logout;
+    }
+
+    /**
+     *
+     * @return _Battle
+     */
+    public String get_Battle() {
+        return _Battle;
+    }
+
+    /**
+     *
+     * @return _SendPos
+     */
+    public String get_SendPos() {
+        return _SendPos;
+    }
+
+    /**
      * Metodo para aplicar hash al password
-     * @param s, contrasena
+     * @param pClave, contrasena
      * @return string con hash
      */
-    public static String MD5_Hash(String s) {
+    public static String MD5_Hash(String pClave) {
         MessageDigest m = null;
 
         try {
@@ -186,7 +266,7 @@ public class Rest {
             e.printStackTrace();
         }
 
-        m.update(s.getBytes(),0,s.length());
+        m.update(pClave.getBytes(), 0, pClave.length());
         String hash = new BigInteger(1, m.digest()).toString(16);
         return hash;
     }

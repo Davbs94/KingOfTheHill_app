@@ -12,6 +12,14 @@
     <uses-permission android:name="android.permission.READ_LOGS" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="com.google.android.providers.gsf.permission.READ_GSERVICES" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+
+    <permission
+        android:name="com.example.googlemaps.permission.MAPS_RECEIVE"
+        android:protectionLevel="signature" />
+
+
 
     <application
         android:allowBackup="true"
@@ -19,7 +27,7 @@
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
         <activity
-            android:name=".Register"
+            android:name=".Game"
             android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -30,30 +38,56 @@
         <activity
             android:name=".Login"
             android:label="@string/title_activity_login" >
+            <intent-filter>
+                <category android:name="android.intent.category.EMBED" />
+            </intent-filter>
         </activity>
         <activity
             android:name=".forgot_password"
             android:label="@string/title_activity_forgot_password" >
+            <intent-filter>
+                <category android:name="android.intent.category.EMBED" />
+            </intent-filter>
         </activity>
         <activity
             android:name=".formulario"
             android:label="@string/title_activity_formulario" >
+            <intent-filter>
+                <category android:name="android.intent.category.EMBED" />
+            </intent-filter>
         </activity>
         <activity
-            android:name=".Webview"
-            android:label="@string/title_activity_webview" >
-        </activity>
-        <activity
-            android:name=".Game"
+            android:name=".Register"
             android:label="@string/title_activity_game" >
+            <intent-filter>
+                <category android:name="android.intent.category.EMBED" />
+            </intent-filter>
         </activity>
         <activity
             android:name=".Pelea_sable"
             android:label="@string/title_activity_pelea_sable" >
+            <intent-filter>
+                <category android:name="android.intent.category.EMBED" />
+            </intent-filter>
         </activity>
         <activity
             android:name=".Escuelas"
             android:label="@string/title_activity_escuelas" >
+            <intent-filter>
+                <category android:name="android.intent.category.EMBED" />
+            </intent-filter>
+        </activity>
+
+        <meta-data
+            android:name="com.google.android.gms.version"
+            android:value="@integer/google_play_services_version" />
+        <meta-data
+            android:name="com.google.android.maps.v2.API_KEY"
+            android:value="@string/google_maps_key" />
+
+        <activity
+            android:name=".Maps"
+            android:label="@string/title_activity_maps" >
         </activity>
     </application>
 

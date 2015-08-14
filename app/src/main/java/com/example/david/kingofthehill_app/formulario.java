@@ -17,36 +17,39 @@ import java.security.NoSuchAlgorithmException;
 
 
 public class formulario extends ActionBarActivity {
-    private JSONObject gson= new JSONObject( );
-    private Rest a= new Rest("http://192.168.56.1:8080/KingOfTheHill/webresources/users/register");
-    private EditText User;
-    private EditText Password;
-    private EditText Question;
-    private EditText Answer;
+    private JSONObject _Datos;
+    private Rest _Server;
+    private EditText _User;
+    private EditText _Password;
+    private EditText _Question;
+    private EditText _Answer;
+    private Button _Register;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         setContentView(R.layout.activity_formulario);
 
-        User = (EditText)findViewById(R.id.editText3);
-        Password = (EditText)findViewById(R.id.editText4);
-        Question = (EditText)findViewById(R.id.editText5);
-        Answer = (EditText)findViewById(R.id.editText6);
+
+        _Datos = new JSONObject( );
+        _Server = new Rest();
+        _User = (EditText)findViewById(R.id.editText3);
+        _Password = (EditText)findViewById(R.id.editText4);
+        _Question = (EditText)findViewById(R.id.editText5);
+        _Answer = (EditText)findViewById(R.id.editText6);
 
 
-        Button Register= (Button)findViewById(R.id.button3);
-        Register.setOnClickListener(
+        _Register = (Button)findViewById(R.id.button3);
+        _Register.setOnClickListener(
                 new Button.OnClickListener() {
                     public void onClick(View v) {
 
                         try {
-                            gson.put("username",User.getText().toString());
-                            gson.put("password",MD5_Hash(Password.getText().toString()));
-                            gson.put("question",Question.getText().toString());
-                            gson.put("answer",Answer.getText().toString());
-                            a.postContent(gson);
+                            _Datos.put("username", _User.getText().toString());
+                            _Datos.put("password", MD5_Hash(_Password.getText().toString()));
+                            _Datos.put("question", _Question.getText().toString());
+                            _Datos.put("answer", _Answer.getText().toString());
+                            _Server.postContent(_Server.get_Registrar(), _Datos);
                         } catch (JSONException e) {
                             e.printStackTrace();
                         } catch (IOException e) {
@@ -74,7 +77,7 @@ public class formulario extends ActionBarActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
+        // as you specify _Server parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement

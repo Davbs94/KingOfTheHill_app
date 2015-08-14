@@ -4,28 +4,47 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
-/**
+/**Clase para guardar preferencias
  * Created by David on 07/08/2015.
  */
 public class SharedPref {
     public SharedPref() {
     }
 
-    public static void putPref(String key, String value, Context context) {
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+    /**
+     * Coloca una preferencia
+     * @param pKey
+     * @param pValue
+     * @param pContext
+     */
+    public static void putPref(String pKey, String pValue, Context pContext) {
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(pContext);
         SharedPreferences.Editor editor = prefs.edit();
-        editor.putString(key, value);
+        editor.putString(pKey, pValue);
         editor.commit();
     }
-    public static void editPref(String key, String value, Context context) {
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+
+    /**
+     * edita una preferencia
+     * @param pKey
+     * @param pValue
+     * @param pContext
+     */
+    public static void editPref(String pKey, String pValue, Context pContext) {
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(pContext);
         SharedPreferences.Editor editor = prefs.edit();
-        editor.putString(key, value);
+        editor.putString(pKey, pValue);
         editor.apply();
     }
 
-    public static String getPref(String key, Context context) {
-        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
-        return preferences.getString(key, null);
+    /**
+     * retorna una prefrencia
+     * @param pKey
+     * @param pContext
+     * @return
+     */
+    public static String getPref(String pKey, Context pContext) {
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(pContext);
+        return preferences.getString(pKey, null);
     }
 }

@@ -16,9 +16,9 @@ public class Register extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
-        Share.putPref("Escuela", "Select School", getApplicationContext());
-        Share.putPref("User","",getApplicationContext());
-        Share.putPref("Token","",getApplicationContext());
+        SharedPref.putPref("Escuela", "Select School", getApplicationContext());
+        SharedPref.putPref("User", "", getApplicationContext());
+        SharedPref.putPref("Token", "", getApplicationContext());
         Button Register= (Button)findViewById(R.id.button2);
         Button Login= (Button)findViewById(R.id.button1);
         Register.setOnClickListener(

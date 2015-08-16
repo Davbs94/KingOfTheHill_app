@@ -11,7 +11,7 @@ import android.widget.Button;
 
 public class Escuelas extends ActionBarActivity  {
 
-    private SharedPref Share= new SharedPref();
+    private SharedPref _Share = new SharedPref();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -20,7 +20,7 @@ public class Escuelas extends ActionBarActivity  {
         mate.setOnClickListener(
                 new Button.OnClickListener() {
                     public void onClick(View v) {
-                        Share.editPref("Escuela", "Matematicas", getApplicationContext());
+                        _Share.editPref("Escuela", "Matematicas", getApplicationContext());
                         Intent myIntent = new Intent(v.getContext(), Login.class);
                         startActivity(myIntent);
                         finish();
@@ -30,7 +30,7 @@ public class Escuelas extends ActionBarActivity  {
         compu.setOnClickListener(
                 new Button.OnClickListener() {
                     public void onClick(View v) {
-                        Share.editPref("Escuela", "Computacion", getApplicationContext());
+                        _Share.editPref("Escuela", "Computacion", getApplicationContext());
                         Intent myIntent = new Intent(v.getContext(), Login.class);
                         startActivity(myIntent);
                         finish();
@@ -40,7 +40,7 @@ public class Escuelas extends ActionBarActivity  {
         fisica.setOnClickListener(
                 new Button.OnClickListener() {
                     public void onClick(View v) {
-                        Share.editPref("Escuela", "Fisica", getApplicationContext());
+                        _Share.editPref("Escuela", "Fisica", getApplicationContext());
                         Intent myIntent = new Intent(v.getContext(), Login.class);
                         startActivity(myIntent);
                         finish();
@@ -50,7 +50,7 @@ public class Escuelas extends ActionBarActivity  {
         fores.setOnClickListener(
                 new Button.OnClickListener() {
                     public void onClick(View v) {
-                        Share.editPref("Escuelas", "Forestal", getApplicationContext());
+                        _Share.editPref("Escuelas", "Forestal", getApplicationContext());
                         Intent myIntent = new Intent(v.getContext(), Login.class);
                         startActivity(myIntent);
                         finish();
@@ -60,7 +60,7 @@ public class Escuelas extends ActionBarActivity  {
         electro.setOnClickListener(
                 new Button.OnClickListener() {
                     public void onClick(View v) {
-                        Share.editPref("Escuela", "Electromecanica", getApplicationContext());
+                        _Share.editPref("Escuela", "Electromecanica", getApplicationContext());
                         Intent myIntent = new Intent(v.getContext(), Login.class);
                         startActivity(myIntent);
                         finish();
@@ -70,7 +70,7 @@ public class Escuelas extends ActionBarActivity  {
         produ.setOnClickListener(
                 new Button.OnClickListener() {
                     public void onClick(View v) {
-                        Share.editPref("Escuela", "Produccion Indus", getApplicationContext());
+                        _Share.editPref("Escuela", "Produccion Indus", getApplicationContext());
                         Intent myIntent = new Intent(v.getContext(), Login.class);
                         startActivity(myIntent);
                         finish();
@@ -80,7 +80,7 @@ public class Escuelas extends ActionBarActivity  {
         Diseno.setOnClickListener(
                 new Button.OnClickListener() {
                     public void onClick(View v) {
-                        Share.editPref("Escuela", "Disenio Indus", getApplicationContext());
+                        _Share.editPref("Escuela", "Disenio Indus", getApplicationContext());
                         Intent myIntent = new Intent(v.getContext(), Login.class);
                         startActivity(myIntent);
                         finish();

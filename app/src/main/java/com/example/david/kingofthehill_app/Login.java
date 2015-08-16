@@ -47,14 +47,14 @@ public class Login extends ActionBarActivity {
         _Datos =new JSONObject();
         _Server = new Rest();
         _Hash= new Clave();
-        _User.setText(_Share.getPref("_User", getApplicationContext()));
+        _User.setText(SharedPref.getPref("_User", getApplicationContext()));
 
         _Escuelas =(Button)findViewById(R.id.button14);
-        _Escuelas.setText(_Share.getPref("Escuela", getApplicationContext()));
+        _Escuelas.setText(SharedPref.getPref("Escuela", getApplicationContext()));
         _Escuelas.setOnClickListener(
                 new Button.OnClickListener() {
                     public void onClick(View v) {
-                        _Share.editPref("_User", _User.getText().toString(), getApplicationContext());
+                        SharedPref.editPref("_User", _User.getText().toString(), getApplicationContext());
                         Intent myIntent = new Intent(v.getContext(), Escuelas.class);
                         startActivity(myIntent);
                         finish();
@@ -64,14 +64,14 @@ public class Login extends ActionBarActivity {
         _Login.setOnClickListener(
                 new Button.OnClickListener() {
                     public void onClick(View v) {
-                        _Share.editPref("_User", _User.getText().toString(), getApplicationContext());
-                        if (_Share.getPref("Escuela", getApplicationContext()).equals("Select School")) {
+                        SharedPref.editPref("_User", _User.getText().toString(), getApplicationContext());
+                        if (SharedPref.getPref("Escuela", getApplicationContext()).equals("Select School")) {
                             new AlertDialog.Builder(Login.this)
                                     .setTitle("Error!")
                                     .setMessage("No school selected")
                                     .setNeutralButton("Continue", new DialogInterface.OnClickListener() {
                                         public void onClick(DialogInterface dialog, int which) {
-                                            _User.setText(_Share.getPref("_User", getApplicationContext()));
+                                            _User.setText(SharedPref.getPref("_User", getApplicationContext()));
                                             _Password.setText("");
                                             //School.setText("");
                                         }
@@ -84,7 +84,7 @@ public class Login extends ActionBarActivity {
                             try {
                                 _Datos.put("username", _User.getText().toString());
                                 _Datos.put("password", _Hash.MD5_Hash(_Password.getText().toString()));
-                                _Datos.put("school", _Share.getPref("Escuela", getApplicationContext()));
+                                _Datos.put("school", SharedPref.getPref("Escuela", getApplicationContext()));
                             } catch (JSONException e) {
                                 e.printStackTrace();
                             }
@@ -109,8 +109,8 @@ public class Login extends ActionBarActivity {
                                 } else {
                                     // guardado del token
                                     _Token = new JSONObject(Result);
-                                    _Share.editPref("_Token", _Token.getString("access_token"), getApplicationContext());
-                                    _Share.editPref("_User", _Datos.getString("username"), getApplicationContext());
+                                    SharedPref.editPref("_Token", _Token.getString("access_token"), getApplicationContext());
+                                    SharedPref.editPref("_User", _Datos.getString("username"), getApplicationContext());
                                     Intent myIntent = new Intent(v.getContext(), Game.class);
                                     startActivity(myIntent);
                                 }

@@ -27,7 +27,7 @@
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
         <activity
-            android:name=".Game"
+            android:name=".Maps"
             android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -57,7 +57,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".Register"
+            android:name=".Game"
             android:label="@string/title_activity_game" >
             <intent-filter>
                 <category android:name="android.intent.category.EMBED" />
@@ -86,7 +86,7 @@
             android:value="@string/google_maps_key" />
 
         <activity
-            android:name=".Maps"
+            android:name=".Register"
             android:label="@string/title_activity_maps" >
         </activity>
     </application>

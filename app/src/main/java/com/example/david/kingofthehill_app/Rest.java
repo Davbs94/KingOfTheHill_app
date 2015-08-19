@@ -1,5 +1,9 @@
 package com.example.david.kingofthehill_app;
 
+import android.os.AsyncTask;
+import android.os.StrictMode;
+import android.widget.Toast;
+
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
@@ -31,9 +35,10 @@ public class Rest {
     private final String _Logout="http://192.168.1.135:8080/KingOfTheHill/webresources/users/logout";
     private final String _Battle="http://192.168.1.135:8080/KingOfTheHill/webresources/mobile/checkBattle";
     private final String _SendPos="http://192.168.135:8080/KingOfTheHill/webresources/mobile/send-position";
+    private final String _Zones="http://192.168.135:8080/KingOfTheHill/webresources/zones/retrieve-zones";
 
     public Rest() {
-
+        HotFix();
     }
 
     /**
@@ -253,21 +258,18 @@ public class Rest {
     }
 
     /**
-     * Metodo para aplicar hash al password
-     * @param pClave, contrasena
-     * @return string con hash
+     *
+     * @return _Zones
      */
-    public static String MD5_Hash(String pClave) {
-        MessageDigest m = null;
+    public String get_Zones() {
+        return _Zones;
+    }
 
-        try {
-            m = MessageDigest.getInstance("MD5");
-        } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
+
+    public void HotFix(){
+        if (android.os.Build.VERSION.SDK_INT > 9) {
+            StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+            StrictMode.setThreadPolicy(policy);
         }
-
-        m.update(pClave.getBytes(), 0, pClave.length());
-        String hash = new BigInteger(1, m.digest()).toString(16);
-        return hash;
     }
 }

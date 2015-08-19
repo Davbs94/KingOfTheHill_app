@@ -26,10 +26,10 @@ public class Presentacion extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_presentacion);
-        _Continue=(Button)findViewById(R.id.button16);
+
 
         _Image=(ImageView)findViewById(R.id.imageView2);
-        _Image.setBackgroundResource(R.drawable.pres);
+        //_Image.setBackgroundResource(R.drawable.pres);
         //anim.start();
 
 

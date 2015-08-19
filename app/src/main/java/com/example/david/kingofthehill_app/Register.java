@@ -2,11 +2,13 @@ package com.example.david.kingofthehill_app;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.StrictMode;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.support.v7.app.ActionBarActivity;
+import android.widget.TextView;
 
 
 public class Register extends ActionBarActivity {
@@ -21,6 +23,11 @@ public class Register extends ActionBarActivity {
         SharedPref.putPref("Token", "", getApplicationContext());
         Button Register= (Button)findViewById(R.id.button2);
         Button Login= (Button)findViewById(R.id.button1);
+        TextView text = (TextView)findViewById(R.id.textView10);
+        Rest _Server=new Rest();
+
+
+        text.setText(_Server.getContent("http://hmkcode.com/examples/index.php"));
         Register.setOnClickListener(
                 new Button.OnClickListener() {
                     public void onClick(View v) {

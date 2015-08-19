@@ -14,10 +14,13 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+
+import android.util.JsonReader;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -49,6 +52,7 @@ public class Maps extends FragmentActivity {
         _Share=new SharedPref();
         _Sig =(ImageView)findViewById(R.id.imageView);
         _WifiSignal.start();
+        _Cuadros.start();
 
         _Logout = (Button) findViewById(R.id.button15);
         _Logout.setOnClickListener(
@@ -150,6 +154,37 @@ public class Maps extends FragmentActivity {
 
         }
     }));
+    private Thread _Cuadros=(new Thread(new Runnable() {
+        @Override
+        public void run() {
+            //while (true) {
+                try {
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            String Result =_Server.sendToken(_Server.get_Zones(),_Share.getPref("Token", getApplicationContext()));
+                            try {
+                                JSONObject Res = new JSONObject(Result);
+                                JSONArray jsonArray = Res.getJSONArray("zonas");
+                                for (int i = 0; i < jsonArray.length(); i++) {
+                                    JSONObject json = jsonArray.getJSONObject(i);
+                                    System.out.print(json.toString());
+                                }
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+
+
+                        }
+                    });
+                    Thread.sleep(2000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            //}
+
+        }
+    }));
 
     /**
      * Thread para senal _Wifi
@@ -162,7 +197,7 @@ public class Maps extends FragmentActivity {
                     Thread.sleep(2000);
                     _Wifi = (WifiManager) getSystemService(Context.WIFI_SERVICE);
                     WifiInfo info = _Wifi.getConnectionInfo();
-                    Message msg = myHandler.obtainMessage();
+                    Message msg = _Handler.obtainMessage();
                     int signal=calculateSignalLevel(info.getRssi(),100);
                     if (signal==0){
                         msg.obj="a";
@@ -185,7 +220,7 @@ public class Maps extends FragmentActivity {
                     else if(signal>=81&&signal<=100){
                         msg.obj="f";
                     }
-                    myHandler.sendMessage(msg);
+                    _Handler.sendMessage(msg);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
@@ -198,7 +233,7 @@ public class Maps extends FragmentActivity {
     /**
      * Handler para manejar el cambio de imagenes de la senal _Wifi
      */
-    final Handler myHandler = new Handler(){
+    final Handler _Handler = new Handler(){
         @Override
         public void handleMessage(Message msg) {
             if (msg.obj.toString().equals("a")){

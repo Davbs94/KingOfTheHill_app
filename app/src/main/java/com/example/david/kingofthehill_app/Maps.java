@@ -16,6 +16,8 @@ import android.os.Message;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 
+import com.google.android.gms.maps.CameraUpdate;
+import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
@@ -51,9 +53,8 @@ public class Maps extends FragmentActivity {
     private Button _Logout;
     private WifiManager _Wifi;
     private ImageView _Sig;
-    private TextView t;
-    private JSONObject _Coordenadas= new JSONObject();
     private  MyLocationListener myLocationListener = new MyLocationListener();
+    private boolean _Running=false;
 
 
 
@@ -62,14 +63,23 @@ public class Maps extends FragmentActivity {
         super.onCreate(savedInstanceState);
 
 
+
         setContentView(R.layout.activity_maps);
         setUpMapIfNeeded();
-        t=(TextView)findViewById(R.id.textView11);
-        _Map.setMapType(GoogleMap.MAP_TYPE_SATELLITE);
-       // _Marker = _Map.addMarker(new MarkerOptions().position(new LatLng(9.313801,-83.663850)));
+        _Map.setMapType(GoogleMap.MAP_TYPE_NORMAL);
+        _Marker = _Map.addMarker(new MarkerOptions().position(new LatLng(0,0)));
         _Server= new Rest();
         _Share=new SharedPref();
         _Sig =(ImageView)findViewById(R.id.imageView);
+        CameraUpdate center=
+                CameraUpdateFactory.newLatLng(new LatLng(9.8560355,
+                        -83.9120774));
+        CameraUpdate zoom=CameraUpdateFactory.zoomTo(17);
+
+        _Map.moveCamera(center);
+        _Map.animateCamera(zoom);
+
+        _Running=true;
 
         _WifiSignal.start();
 
@@ -84,8 +94,15 @@ public class Maps extends FragmentActivity {
                 new Button.OnClickListener() {
                     public void onClick(View v) {
 
-                        JSONObject J = new JSONObject();
-                        _Server.sendToken(_Server.get_ActPos(), _Share.getPref("_Token", getApplicationContext()));
+                        _Running=false;
+                        try {
+                            Thread.sleep(500);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+
+
+                        _Server.sendToken(_Server.get_Logout(), _Share.getPref("_Token", getApplicationContext()));
                         myLocationListener.set_Ingame(false);
 
 
@@ -147,20 +164,26 @@ public class Maps extends FragmentActivity {
     private Thread _Posicion=(new Thread(new Runnable() {
         @Override
         public void run() {
-            while (true) {
+
+            while (_Running) {
                 try {
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
                             //Codigo para mover posicion
+                            //Cambiar y agregar url
+                            String Result=_Server.sendToken(_Server.get_ActPos(), _Share.getPref("_Token", getApplicationContext()));
                             try {
-                                //Cambiar y agregar url
-                                _Coordenadas = new JSONObject(_Server.sendToken(_Server.get_ActPos(), _Share.getPref("Token", getApplicationContext())));
+                                JSONObject _Coordenadas = new JSONObject(Result);
                                 _Marker.setPosition(new LatLng(_Coordenadas.getDouble("lat"), _Coordenadas.getDouble("long")));
                                 _Marker.setTitle(_Coordenadas.getString("username"));
                             } catch (JSONException e) {
                                 e.printStackTrace();
                             }
+                            //JSONObject _Coordenadas= new JSONObject(_Server.sendToken(_Server.get_ActPos(), _Share.getPref("_Token", getApplicationContext())));
+                            //_Marker.setPosition(new LatLng(_Coordenadas.getDouble("lat"), _Coordenadas.getDouble("long")));
+
+
 
                         }
                     });
@@ -175,7 +198,7 @@ public class Maps extends FragmentActivity {
     private Thread _Cuadros=(new Thread(new Runnable() {
         @Override
         public void run() {
-            while (true) {
+            while (_Running) {
                 try {
                     runOnUiThread(new Runnable() {
                         @Override
@@ -223,7 +246,7 @@ public class Maps extends FragmentActivity {
     private Thread _WifiSignal =(new Thread(new Runnable() {
         @Override
         public void run() {
-            while(true){
+            while(_Running){
                 try {
                     Thread.sleep(2000);
                     _Wifi = (WifiManager) getSystemService(Context.WIFI_SERVICE);
@@ -311,14 +334,14 @@ public class Maps extends FragmentActivity {
 
     private Thread _Check= new Thread(new Runnable() {
         public void run() {
-            while (true) {
-                try {
-                    _Server.postContentUser(_Server.get_Battle(), null, _Share.getPref("Token", getApplicationContext()));
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+            while (_Running) {
+
+                    String Result=_Server.sendToken(_Server.get_Battle(), _Share.getPref("Token", getApplicationContext()));
+                    if (Result.equals("battle")){
+                        Intent myIntent = new Intent(Maps.this, Pelea_sable.class);
+                        startActivity(myIntent);
+                    }
+
                 try {
                     Thread.sleep(200);
                 } catch (InterruptedException e) {
@@ -347,5 +370,8 @@ public class Maps extends FragmentActivity {
         }
     }
 
+    public void set_Running(boolean pState){
+        _Running=pState;
+    }
 
 }

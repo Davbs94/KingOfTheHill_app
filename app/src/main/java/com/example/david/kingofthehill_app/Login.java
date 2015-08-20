@@ -64,8 +64,8 @@ public class Login extends ActionBarActivity {
         _Login.setOnClickListener(
                 new Button.OnClickListener() {
                     public void onClick(View v) {
-                        SharedPref.editPref("_User", _User.getText().toString(), getApplicationContext());
-                        if (SharedPref.getPref("Escuela", getApplicationContext()).equals("Select School")) {
+                        _Share.editPref("_User", _User.getText().toString(), getApplicationContext());
+                        if (_Share.getPref("Escuela", getApplicationContext()).equals("Select School")) {
                             new AlertDialog.Builder(Login.this)
                                     .setTitle("Error!")
                                     .setMessage("No school selected")
@@ -109,8 +109,9 @@ public class Login extends ActionBarActivity {
                                 } else {
                                     // guardado del token
                                     _Token = new JSONObject(Result);
-                                    SharedPref.editPref("_Token", _Token.getString("access_token"), getApplicationContext());
-                                    SharedPref.editPref("_User", _Datos.getString("username"), getApplicationContext());
+                                    _Share.editPref("_Token", _Token.getString("access_token"), getApplicationContext());
+                                    _Share.editPref("_User", _Datos.getString("username"), getApplicationContext());
+                                    Thread.sleep(500);
                                     Intent myIntent = new Intent(v.getContext(), Maps.class);
                                     startActivity(myIntent);
                                 }
@@ -118,6 +119,8 @@ public class Login extends ActionBarActivity {
                             } catch (JSONException e) {
                                 e.printStackTrace();
                             } catch (IOException e) {
+                                e.printStackTrace();
+                            } catch (InterruptedException e) {
                                 e.printStackTrace();
                             }
                         }

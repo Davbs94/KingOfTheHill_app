@@ -216,7 +216,7 @@ public class Pelea_sable extends ActionBarActivity implements SensorEventListene
             TotalMovementAux = 0;
 
             sm.unregisterListener(this, mAccelerometer);
-            Intent myIntent = new Intent(Pelea_sable.this, Game.class);
+            Intent myIntent = new Intent(Pelea_sable.this, Maps.class);
             startActivity(myIntent);
             finish();
         }

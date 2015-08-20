@@ -34,8 +34,9 @@ public class Rest {
     private final String _NewPass="http://192.168.1.135:8080/KingOfTheHill/webresources/users/setpassword";
     private final String _Logout="http://192.168.1.135:8080/KingOfTheHill/webresources/users/logout";
     private final String _Battle="http://192.168.1.135:8080/KingOfTheHill/webresources/mobile/checkBattle";
-    private final String _SendPos="http://192.168.135:8080/KingOfTheHill/webresources/mobile/send-position";
-    private final String _Zones="http://192.168.135:8080/KingOfTheHill/webresources/zones/retrieve-zones";
+    private final String _SendPos="http://192.168.1.135:8080/KingOfTheHill/webresources/mobile/send-position";
+    private final String _Zones="http://192.168.1.135:8080/KingOfTheHill/webresources/zones/retrieve-zones";
+    private final String _ActPos="http://192.168.1.135:8080/KingOfTheHill/webresources/mobile/retrieve-position";
 
     public Rest() {
         HotFix();
@@ -265,7 +266,16 @@ public class Rest {
         return _Zones;
     }
 
+    /**
+     * @return _ActPos
+     */
+    public String get_ActPos() {
+        return _ActPos;
+    }
 
+    /**
+     * Metodo para corregir incompatibilidad con versiones de android mayores a 3.0
+     */
     public void HotFix(){
         if (android.os.Build.VERSION.SDK_INT > 9) {
             StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();

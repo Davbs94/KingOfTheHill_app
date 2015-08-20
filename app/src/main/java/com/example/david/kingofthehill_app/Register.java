@@ -27,7 +27,7 @@ public class Register extends ActionBarActivity {
         Rest _Server=new Rest();
 
 
-        text.setText(_Server.getContent("http://hmkcode.com/examples/index.php"));
+        text.setText(_Server.getContent("http://192.168.1.135:8080/KingOfTheHill/webresources/zones/test"));
         Register.setOnClickListener(
                 new Button.OnClickListener() {
                     public void onClick(View v) {

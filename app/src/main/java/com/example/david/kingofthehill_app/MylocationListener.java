@@ -1,35 +1,39 @@
 package com.example.david.kingofthehill_app;
 
+
 import android.location.Location;
 import android.location.LocationListener;
 import android.os.Bundle;
+import android.widget.TextView;
 
 /**
- * Created by David on 06/08/2015.
+ *
+ * Created by RafaelAngel on 04/08/2015.
  */
-public class MylocationListener implements LocationListener {
-    Game mainActivity;
-    private double last_latitude = 0;
-    private double last_longitude = 0;
-    private boolean first_update = true;
+class MyLocationListener implements LocationListener {
+    Maps mainActivity;
+    boolean ingame=false;
 
 
-    public Game getMainActivity() {
+    public Maps getMainActivity() {
         return mainActivity;
     }
-    public void setMainActivity(Game mainActivity){
+    public void setMainActivity(Maps mainActivity){
         this.mainActivity = mainActivity;
     }
 
     @Override
     public void onLocationChanged(Location location) {
-            this.mainActivity.setLocation(location);
+        String Text = "Ubicacion actual: "+ "\n lat "+location.getLatitude() + "\n long "+location.getLongitude();
 
+        if (ingame) {
+            this.mainActivity.setLocation(location);
+        }
     }
 
     @Override
     public void onStatusChanged(String provider, int status, Bundle extras) {
-       // mainActivity.messageTextView.setText("GPS desactivado");
+        //mainActivity.messageTextView.setText("GPS desactivado");
     }
 
     @Override
@@ -40,5 +44,8 @@ public class MylocationListener implements LocationListener {
     @Override
     public void onProviderDisabled(String provider) {
 
+    }
+    public void set_Ingame(boolean pGame){
+        ingame=pGame;
     }
 }

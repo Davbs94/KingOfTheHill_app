@@ -54,13 +54,6 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".Game"
-            android:label="@string/title_activity_game" >
-            <intent-filter>
-                <category android:name="android.intent.category.EMBED" />
-            </intent-filter>
-        </activity>
-        <activity
             android:name=".Pelea_sable"
             android:label="@string/title_activity_pelea_sable" >
             <intent-filter>

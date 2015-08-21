@@ -16,6 +16,10 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
 import java.util.List;
 import java.util.Random;
 
@@ -31,6 +35,8 @@ public class Pelea_sable extends ActionBarActivity implements SensorEventListene
     private  float TotalMovement = 0;
     private float TotalMovementAux = 0;
     private Random rand = new Random();
+    private Rest _Server;
+    private SharedPref _Share= new SharedPref();
 
     TextView x,y,z;
 
@@ -214,7 +220,22 @@ public class Pelea_sable extends ActionBarActivity implements SensorEventListene
 
             TotalMovement = 0;
             TotalMovementAux = 0;
-
+            JSONObject _Points = new JSONObject();
+            try {
+                _Points.put("points",Float.toString(TotalMovement / 1E-5f));
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            try {
+                _Server.postContentUser(_Server.get_SendPoints(), _Points, _Share.getPref("_Token", getApplicationContext()));
+                Thread.sleep(2000);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
             sm.unregisterListener(this, mAccelerometer);
             Intent myIntent = new Intent(Pelea_sable.this, Maps.class);
             startActivity(myIntent);

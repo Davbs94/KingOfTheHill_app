@@ -55,7 +55,7 @@ public class Maps extends FragmentActivity {
     private ImageView _Sig;
     private  MyLocationListener myLocationListener = new MyLocationListener();
     private boolean _Running=false;
-
+    private boolean _RunningBattle=false;
 
 
     @Override
@@ -80,11 +80,13 @@ public class Maps extends FragmentActivity {
         _Map.animateCamera(zoom);
 
         _Running=true;
+        _RunningBattle=true;
 
         _WifiSignal.start();
 
         _Cuadros.start();
         _Posicion.start();
+        _Check.start();
 
 
 
@@ -334,22 +336,43 @@ public class Maps extends FragmentActivity {
 
     private Thread _Check= new Thread(new Runnable() {
         public void run() {
-            while (_Running) {
-
-                    String Result=_Server.sendToken(_Server.get_Battle(), _Share.getPref("Token", getApplicationContext()));
-                    if (Result.equals("battle")){
-                        Intent myIntent = new Intent(Maps.this, Pelea_sable.class);
-                        startActivity(myIntent);
-                    }
-
+            while (_RunningBattle) {
                 try {
-                    Thread.sleep(200);
+                    Thread.sleep(1000);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
+
+                    String Result=_Server.sendToken(_Server.get_Battle(), _Share.getPref("_Token", getApplicationContext()));
+                try {
+                    JSONObject _Bas=new JSONObject(Result);
+                    System.out.print(Result);
+
+                    if (_Bas.getString("battle").equals("true")){
+                        System.out.print("Entre");
+                        _RunningBattle=false;
+                        Message m= new Message();
+                        _Pelea.sendMessage(m);
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+
             }
         }
     });
+
+    Handler _Pelea = new Handler(){
+        public void handleMessage(Message m){
+            Intent intent = new Intent (Maps.this, Pelea_sable.class);
+            startActivity(intent);
+        }
+    };
 
     public void setLocation(Location location){
         if(location.getLatitude() != 0.0 && location.getLongitude() != 0.0){

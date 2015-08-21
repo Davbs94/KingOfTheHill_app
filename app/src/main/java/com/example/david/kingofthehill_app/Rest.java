@@ -33,11 +33,11 @@ public class Rest {
     private final String _Forgot="http://192.168.1.135:8080/KingOfTheHill/webresources/users/forgotpassword";
     private final String _NewPass="http://192.168.1.135:8080/KingOfTheHill/webresources/users/setpassword";
     private final String _Logout="http://192.168.1.135:8080/KingOfTheHill/webresources/users/logout";
-    private final String _Battle="http://192.168.1.135:8080/KingOfTheHill/webresources/mobile/checkBattle";
+    private final String _Battle="http://192.168.1.135:8080/KingOfTheHill/webresources/mobile/checkbattle";
     private final String _SendPos="http://192.168.1.135:8080/KingOfTheHill/webresources/mobile/send-position";
     private final String _Zones="http://192.168.1.135:8080/KingOfTheHill/webresources/zones/retrieve-zones";
     private final String _ActPos="http://192.168.1.135:8080/KingOfTheHill/webresources/mobile/retrieve-position";
-
+    private final String _SendPoints="http://192.168.1.135:8080/KingOfTheHill/webresources/mobile/sendresult";
     public Rest() {
         HotFix();
     }
@@ -271,6 +271,14 @@ public class Rest {
      */
     public String get_ActPos() {
         return _ActPos;
+    }
+
+    /**
+     *
+     * @return _SendPoints
+     */
+    public String get_SendPoints(){
+        return _SendPoints;
     }
 
     /**

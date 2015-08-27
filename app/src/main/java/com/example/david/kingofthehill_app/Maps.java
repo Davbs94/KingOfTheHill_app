@@ -41,35 +41,32 @@ public class Maps extends FragmentActivity {
     private ImageView _Sig;
     private  MyLocationListener myLocationListener = new MyLocationListener();
     private boolean _Running=false;
-    private boolean _RunningBattle=false;
+    private LatLng _Focus=new LatLng(9.8560355, -83.9120774);
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-
-
         setContentView(R.layout.activity_maps);
         setUpMapIfNeeded();
+
+        //Cofiguracion del mapa
         _Map.setMapType(GoogleMap.MAP_TYPE_NORMAL);
         _Marker = _Map.addMarker(new MarkerOptions().position(new LatLng(0,0)));
-        _Server= new Rest();
-        _Share=new SharedPref();
-        _Sig =(ImageView)findViewById(R.id.imageView);
-        CameraUpdate center=
-                CameraUpdateFactory.newLatLng(new LatLng(9.8560355,
-                        -83.9120774));
+        CameraUpdate center= CameraUpdateFactory.newLatLng(_Focus);
         CameraUpdate zoom=CameraUpdateFactory.zoomTo(17);
-
         _Map.moveCamera(center);
         _Map.animateCamera(zoom);
 
+
+        _Server= new Rest();
+        _Share=new SharedPref();
+        _Sig =(ImageView)findViewById(R.id.imageView);
+
+
+        //Threads
         _Running=true;
-        _RunningBattle=Boolean.valueOf(_Share.getPref("_Battle",getApplicationContext()));
-
         _WifiSignal.start();
-
         _Cuadros.start();
         _Posicion.start();
         _Check.start();
@@ -122,7 +119,6 @@ public class Maps extends FragmentActivity {
         setUpMapIfNeeded();
         myLocationListener.set_Ingame(true);
         _Running=true;
-        _RunningBattle=true;
 
     }
 
@@ -131,7 +127,7 @@ public class Maps extends FragmentActivity {
         super.onPause();
         myLocationListener.set_Ingame(false);
         _Running=false;
-        _RunningBattle=false;
+
     }
 
 
@@ -334,7 +330,7 @@ public class Maps extends FragmentActivity {
 
     private Thread _Check= new Thread(new Runnable() {
         public void run() {
-            while (_RunningBattle) {
+            while (_Running) {
                 try {
                     Thread.sleep(1000);
                 } catch (InterruptedException e) {
@@ -345,11 +341,8 @@ public class Maps extends FragmentActivity {
                 if (Result!=null){
                     try {
                         JSONObject _Bas=new JSONObject(Result);
-                        System.out.print(Result);
-
                         if (_Bas.getString("battle").equals("true")){
-                            System.out.print("Entre");
-                            _Share.editPref("_Batalla","false",getApplicationContext());
+                            _Running=false;
                             Message m= new Message();
                             _Pelea.sendMessage(m);
                         }
@@ -372,6 +365,7 @@ public class Maps extends FragmentActivity {
         public void handleMessage(Message m){
             Intent intent = new Intent (Maps.this, Pelea_sable.class);
             startActivity(intent);
+            finish();
         }
     };
 

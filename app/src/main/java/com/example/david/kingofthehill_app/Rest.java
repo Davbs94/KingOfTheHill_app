@@ -27,18 +27,18 @@ import java.security.NoSuchAlgorithmException;
  * Clase para administracion de REST
  */
 public class Rest {
-    private final String _IP="http://192.168.1.135:8080";
-    private final String _Registrar=_IP+"/KingOfTheHill/webresources/users/register";
-    private final String _Login=_IP+"http://192.168.1.135:8080/KingOfTheHill/webresources/users/login";
-    private final String _Forgot=_IP+"http://192.168.1.135:8080/KingOfTheHill/webresources/users/forgotpassword";
-    private final String _NewPass=_IP+"http://192.168.1.135:8080/KingOfTheHill/webresources/users/setpassword";
-    private final String _Logout=_IP+"http://192.168.1.135:8080/KingOfTheHill/webresources/users/logout";
-    private final String _Battle=_IP+"http://192.168.1.135:8080/KingOfTheHill/webresources/mobile/checkbattle";
-    private final String _SendPos=_IP+"http://192.168.1.135:8080/KingOfTheHill/webresources/mobile/send-position";
-    private final String _Zones=_IP+"http://192.168.1.135:8080/KingOfTheHill/webresources/zones/retrieve-zones";
-    private final String _ActPos=_IP+"http://192.168.1.135:8080/KingOfTheHill/webresources/mobile/retrieve-position";
-    private final String _SendPoints=_IP+"http://192.168.1.135:8080/KingOfTheHill/webresources/mobile/sendresult";
-    private final String _CheckServer=_IP+"http://192.168.1.135:8080/KingOfTheHill/webresources/mobile/check";
+    private final String _IP="http://192.168.1.135:8080/KingOfTheHill/webresources/";
+    private final String _Registrar=_IP+"users/register";
+    private final String _Login=_IP+"users/login";
+    private final String _Forgot=_IP+"users/forgotpassword";
+    private final String _NewPass=_IP+"users/setpassword";
+    private final String _Logout=_IP+"users/logout";
+    private final String _Battle=_IP+"mobile/checkbattle";
+    private final String _SendPos=_IP+"mobile/send-position";
+    private final String _Zones=_IP+"zones/retrieve-zones";
+    private final String _ActPos=_IP+"mobile/retrieve-position";
+    private final String _SendPoints=_IP+"mobile/sendresult";
+    private final String _CheckServer=_IP+"mobile/check";
 
 
 

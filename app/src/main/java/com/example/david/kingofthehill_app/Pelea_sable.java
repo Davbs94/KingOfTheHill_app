@@ -228,7 +228,7 @@ public class Pelea_sable extends ActionBarActivity implements SensorEventListene
             }
             try {
                 _Server.postContentUser(_Server.get_SendPoints(), _Points, _Share.getPref("_Token", getApplicationContext()));
-                Thread.sleep(2000);
+                Thread.sleep(3000);
             } catch (JSONException e) {
                 e.printStackTrace();
             } catch (IOException e) {

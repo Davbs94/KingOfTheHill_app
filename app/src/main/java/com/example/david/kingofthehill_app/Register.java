@@ -22,7 +22,6 @@ public class Register extends ActionBarActivity {
         _Share.putPref("_User", "", getApplicationContext());
         _Share.putPref("_Pass", "", getApplicationContext());
         _Share.putPref("_Token", "", getApplicationContext());
-        _Share.putPref("_Batalla","true",getApplicationContext());
         Button Register= (Button)findViewById(R.id.button2);
         Button Login= (Button)findViewById(R.id.button1);
 
@@ -34,6 +33,7 @@ public class Register extends ActionBarActivity {
                     public void onClick(View v) {
                         Intent myIntent = new Intent(v.getContext(), formulario.class);
                         startActivity(myIntent);
+                        finish();
                     }
                 }
         );
@@ -42,6 +42,7 @@ public class Register extends ActionBarActivity {
                     public void onClick(View v) {
                         Intent myIntent = new Intent(v.getContext(), Login.class);
                         startActivity(myIntent);
+                        finish();
                     }
                 }
         );

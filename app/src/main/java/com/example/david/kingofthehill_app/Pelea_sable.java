@@ -25,7 +25,7 @@ import java.util.Random;
 
 import static com.example.david.kingofthehill_app.R.raw.*;
 
-
+//
 public class Pelea_sable extends ActionBarActivity implements SensorEventListener,SensorListener {
 
     private long last_update = 0, last_movement = 0,game_timer = 0;

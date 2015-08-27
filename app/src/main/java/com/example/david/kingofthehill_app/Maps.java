@@ -3,19 +3,15 @@ package com.example.david.kingofthehill_app;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
-import android.location.Address;
-import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
-import android.net.wifi.ScanResult;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
-
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -25,28 +21,18 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polygon;
 import com.google.android.gms.maps.model.PolygonOptions;
-import com.google.android.gms.maps.model.Polyline;
-import com.google.android.gms.maps.model.PolylineOptions;
-
-import android.util.JsonReader;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.TextView;
-import android.widget.Toast;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
 import java.io.IOException;
-import java.util.List;
-import java.util.Locale;
+
 
 public class Maps extends FragmentActivity {
 
-    private GoogleMap _Map; // Might be null if Google Play services APK is not available.
+    private GoogleMap _Map;
     private Marker _Marker;
     private Rest _Server;
     private SharedPref _Share;
@@ -80,7 +66,7 @@ public class Maps extends FragmentActivity {
         _Map.animateCamera(zoom);
 
         _Running=true;
-        _RunningBattle=true;
+        _RunningBattle=Boolean.valueOf(_Share.getPref("_Battle",getApplicationContext()));
 
         _WifiSignal.start();
 
@@ -135,6 +121,8 @@ public class Maps extends FragmentActivity {
         super.onResume();
         setUpMapIfNeeded();
         myLocationListener.set_Ingame(true);
+        _Running=true;
+        _RunningBattle=true;
 
     }
 
@@ -142,6 +130,8 @@ public class Maps extends FragmentActivity {
     protected void onPause() {
         super.onPause();
         myLocationListener.set_Ingame(false);
+        _Running=false;
+        _RunningBattle=false;
     }
 
 
@@ -174,16 +164,21 @@ public class Maps extends FragmentActivity {
                         public void run() {
                             //Codigo para mover posicion
                             //Cambiar y agregar url
-                            String Result=_Server.sendToken(_Server.get_ActPos(), _Share.getPref("_Token", getApplicationContext()));
                             try {
-                                JSONObject _Coordenadas = new JSONObject(Result);
-                                _Marker.setPosition(new LatLng(_Coordenadas.getDouble("lat"), _Coordenadas.getDouble("long")));
-                                _Marker.setTitle(_Coordenadas.getString("username"));
-                            } catch (JSONException e) {
+                                Thread.sleep(500);
+                            } catch (InterruptedException e) {
                                 e.printStackTrace();
                             }
-                            //JSONObject _Coordenadas= new JSONObject(_Server.sendToken(_Server.get_ActPos(), _Share.getPref("_Token", getApplicationContext())));
-                            //_Marker.setPosition(new LatLng(_Coordenadas.getDouble("lat"), _Coordenadas.getDouble("long")));
+                            String Result=_Server.sendToken(_Server.get_ActPos(), _Share.getPref("_Token", getApplicationContext()));
+                            if (Result!=null){
+                                try {
+                                    JSONObject _Coordenadas = new JSONObject(Result);
+                                    _Marker.setPosition(new LatLng(_Coordenadas.getDouble("lat"), _Coordenadas.getDouble("long")));
+                                    _Marker.setTitle(_Coordenadas.getString("username"));
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                }
+                            }
 
 
 
@@ -206,27 +201,30 @@ public class Maps extends FragmentActivity {
                         @Override
                         public void run() {
                             try {
+                                Thread.sleep(500);
                                 String Result = _Server.sendToken(_Server.get_Zones(), _Share.getPref("_Token", getApplicationContext()));
-                                JSONObject Res = new JSONObject(Result);
-                                JSONArray jsonArray = null;
-                                jsonArray = Res.getJSONArray("zonas");
+                                if (Result!=null){
+                                    JSONObject Res = new JSONObject(Result);
+                                    JSONArray jsonArray = null;
+                                    jsonArray = Res.getJSONArray("zonas");
+                                    for (int i = 0; i < jsonArray.length(); i++) {
+                                        JSONObject json = jsonArray.getJSONObject(i);
+                                        PolygonOptions b = new PolygonOptions().add(new LatLng(json.getDouble("lat1"), json.getDouble("long1"))
+                                                , new LatLng(json.getDouble("lat1"), json.getDouble("long2"))
+                                                , new LatLng(json.getDouble("lat2"), json.getDouble("long2"))
+                                                , new LatLng(json.getDouble("lat2"), json.getDouble("long1"))).strokeColor(Color.parseColor(json.getString("color")))
+                                                .strokeWidth(1);
+                                        Polygon a = _Map.addPolygon(b);
+                                        a.setStrokeWidth(1);
+                                        a.setFillColor(Color.parseColor(json.getString("color")));
 
-
-                                //t.setText(json.get("lat2").toString());
-                                for (int i = 0; i < jsonArray.length(); i++) {
-                                    JSONObject json = jsonArray.getJSONObject(i);
-                                    PolygonOptions b = new PolygonOptions().add(new LatLng(json.getDouble("lat1"), json.getDouble("long1"))
-                                            , new LatLng(json.getDouble("lat1"), json.getDouble("long2"))
-                                            , new LatLng(json.getDouble("lat2"), json.getDouble("long2"))
-                                            , new LatLng(json.getDouble("lat2"), json.getDouble("long1"))).strokeColor(Color.parseColor(json.getString("color")))
-                                            .strokeWidth(1);
-                                    Polygon a = _Map.addPolygon(b);
-                                    a.setStrokeWidth(1);
-                                    a.setFillColor(Color.parseColor(json.getString("color")));
-
+                                    }
                                 }
 
+
                             } catch (JSONException e) {
+                                e.printStackTrace();
+                            } catch (InterruptedException e) {
                                 e.printStackTrace();
                             }
 
@@ -344,24 +342,27 @@ public class Maps extends FragmentActivity {
                 }
 
                     String Result=_Server.sendToken(_Server.get_Battle(), _Share.getPref("_Token", getApplicationContext()));
-                try {
-                    JSONObject _Bas=new JSONObject(Result);
-                    System.out.print(Result);
+                if (Result!=null){
+                    try {
+                        JSONObject _Bas=new JSONObject(Result);
+                        System.out.print(Result);
 
-                    if (_Bas.getString("battle").equals("true")){
-                        System.out.print("Entre");
-                        _RunningBattle=false;
-                        Message m= new Message();
-                        _Pelea.sendMessage(m);
+                        if (_Bas.getString("battle").equals("true")){
+                            System.out.print("Entre");
+                            _Share.editPref("_Batalla","false",getApplicationContext());
+                            Message m= new Message();
+                            _Pelea.sendMessage(m);
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
                     }
-                } catch (JSONException e) {
-                    e.printStackTrace();
+                    try {
+                        Thread.sleep(1000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
                 }
-                try {
-                    Thread.sleep(1000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
+
 
             }
         }
@@ -393,8 +394,6 @@ public class Maps extends FragmentActivity {
         }
     }
 
-    public void set_Running(boolean pState){
-        _Running=pState;
-    }
+
 
 }

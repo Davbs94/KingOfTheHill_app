@@ -50,7 +50,7 @@ public class Escuelas extends ActionBarActivity  {
         fores.setOnClickListener(
                 new Button.OnClickListener() {
                     public void onClick(View v) {
-                        _Share.editPref("Escuelas", "Forestal", getApplicationContext());
+                        _Share.editPref("Escuela", "Forestal", getApplicationContext());
                         Intent myIntent = new Intent(v.getContext(), Login.class);
                         startActivity(myIntent);
                         finish();

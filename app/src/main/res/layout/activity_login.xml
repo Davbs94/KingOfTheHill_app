@@ -7,17 +7,19 @@
     tools:context="com.example.david.kingofthehill_app.Login"
     android:id="@+id/login"
     android:transitionGroup="false"
-    android:background="#ffc3ff79">
+    android:background="@drawable/wall"
+    android:textAlignment="center">
 
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/button"
-        android:layout_marginTop="81dp"
         android:text="Enter"
         android:typeface="serif"
-        android:layout_below="@+id/button14"
-        android:layout_centerHorizontal="true" />
+        android:background="@android:color/background_light"
+        android:layout_above="@+id/button6"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="17dp" />
 
     <EditText
         android:layout_width="wrap_content"
@@ -27,7 +29,10 @@
         android:id="@+id/editText"
         android:layout_below="@+id/textView2"
         android:layout_alignLeft="@+id/editText2"
-        android:layout_alignStart="@+id/editText2" />
+        android:layout_alignStart="@+id/editText2"
+        android:background="@android:color/darker_gray"
+        android:textColor="@android:color/background_dark"
+        android:textAlignment="center" />
 
     <EditText
         android:layout_width="wrap_content"
@@ -35,6 +40,9 @@
         android:inputType="textPassword"
         android:ems="10"
         android:id="@+id/editText2"
+        android:background="@android:color/darker_gray"
+        android:textColor="@android:color/background_dark"
+        android:textAlignment="center"
         android:layout_below="@+id/textView"
         android:layout_centerHorizontal="true" />
 
@@ -45,9 +53,11 @@
         android:text="Password"
         android:id="@+id/textView"
         android:typeface="serif"
-        android:layout_below="@+id/button14"
+        android:textColor="@android:color/background_light"
+        android:layout_below="@+id/editText"
         android:layout_alignLeft="@+id/button"
-        android:layout_alignStart="@+id/button" />
+        android:layout_alignStart="@+id/button"
+        android:layout_marginTop="31dp" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -58,26 +68,17 @@
         android:fontFeatureSettings="@string/title_activity_login"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-        android:typeface="serif" />
+        android:typeface="serif"
+        android:textColor="@android:color/background_light" />
 
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Forgot password"
         android:id="@+id/button6"
-        android:layout_marginTop="28dp"
-        android:layout_below="@+id/button"
-        android:layout_centerHorizontal="true"
-        android:typeface="serif" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="School"
-        android:id="@+id/textView3"
         android:typeface="serif"
-        android:layout_below="@+id/editText"
+        android:background="@android:color/background_light"
+        android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true" />
 
     <Button
@@ -85,7 +86,9 @@
         android:layout_height="wrap_content"
         android:text="Select School"
         android:id="@+id/button14"
-        android:layout_below="@+id/textView3"
+        android:background="@android:color/background_light"
+        android:layout_marginTop="35dp"
+        android:layout_below="@+id/editText2"
         android:layout_centerHorizontal="true" />
 
 </RelativeLayout>

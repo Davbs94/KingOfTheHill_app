@@ -48,82 +48,113 @@ public class Login extends ActionBarActivity {
         _Server = new Rest();
         _Hash= new Clave();
         _User.setText(SharedPref.getPref("_User", getApplicationContext()));
-
+        _Password.setText(SharedPref.getPref("_Pass", getApplicationContext()));
         _Escuelas =(Button)findViewById(R.id.button14);
         _Escuelas.setText(SharedPref.getPref("Escuela", getApplicationContext()));
+        String _On= _Server.getContent(_Server.get_CheckServer());
+
+        if (_On.equals("rekt")){
+            new AlertDialog.Builder(Login.this)
+                    .setTitle("Error!")
+                    .setMessage("Server not found")
+                    .setNeutralButton("Continue", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            _User.setText(SharedPref.getPref("_User", getApplicationContext()));
+                            _Password.setText("");
+                            Intent myIntent = new Intent(Login.this, Register.class);
+                            startActivity(myIntent);
+                            finish();
+
+                        }
+                    })
+                    .setIcon(android.R.drawable.ic_dialog_alert)
+                    .show();
+        }
+
         _Escuelas.setOnClickListener(
                 new Button.OnClickListener() {
                     public void onClick(View v) {
-                        SharedPref.editPref("_User", _User.getText().toString(), getApplicationContext());
+                        _Share.editPref("_User", _User.getText().toString(), getApplicationContext());
+                        _Share.editPref("_Pass", _Password.getText().toString(), getApplicationContext());
                         Intent myIntent = new Intent(v.getContext(), Escuelas.class);
                         startActivity(myIntent);
                         finish();
                     }
                 });
-
+        System.out.print(_Server.getContent(_Server.get_CheckServer()));
         _Login.setOnClickListener(
                 new Button.OnClickListener() {
                     public void onClick(View v) {
-                        _Share.editPref("_User", _User.getText().toString(), getApplicationContext());
-                        if (_Share.getPref("Escuela", getApplicationContext()).equals("Select School")) {
-                            new AlertDialog.Builder(Login.this)
-                                    .setTitle("Error!")
-                                    .setMessage("No school selected")
-                                    .setNeutralButton("Continue", new DialogInterface.OnClickListener() {
-                                        public void onClick(DialogInterface dialog, int which) {
-                                            _User.setText(SharedPref.getPref("_User", getApplicationContext()));
-                                            _Password.setText("");
-                                            //School.setText("");
-                                        }
-                                    })
-                                    .setIcon(android.R.drawable.ic_dialog_alert)
-                                    .show();
-                        } else {
+
+                            _Share.editPref("_User", _User.getText().toString(), getApplicationContext());
+                            _Share.editPref("_Pass",_Password.getText().toString(), getApplicationContext());
+                            if (_Share.getPref("Escuela", getApplicationContext()).equals("Select School")) {
+                                new AlertDialog.Builder(Login.this)
+                                        .setTitle("Error!")
+                                        .setMessage("No school selected")
+                                        .setNeutralButton("Continue", new DialogInterface.OnClickListener() {
+                                            public void onClick(DialogInterface dialog, int which) {
+                                                _User.setText(SharedPref.getPref("_User", getApplicationContext()));
+                                                _Password.setText("");
+
+                                            }
+                                        })
+                                        .setIcon(android.R.drawable.ic_dialog_alert)
+                                        .show();
+                            } else {
 
 
-                            try {
-                                _Datos.put("username", _User.getText().toString());
-                                _Datos.put("password", _Hash.MD5_Hash(_Password.getText().toString()));
-                                _Datos.put("school", SharedPref.getPref("Escuela", getApplicationContext()));
-                            } catch (JSONException e) {
-                                e.printStackTrace();
-                            }
-
-                            try {
-
-                                String Result = _Server.postContent(_Server.get_Login(), _Datos);
-
-                                if (Result == null) {
-                                    new AlertDialog.Builder(Login.this)
-                                            .setTitle("Error!")
-                                            .setMessage("Invalid username or password")
-                                            .setNeutralButton("Continue", new DialogInterface.OnClickListener() {
-                                                public void onClick(DialogInterface dialog, int which) {
-                                                    _User.setText("");
-                                                    _Password.setText("");
-
-                                                }
-                                            })
-                                            .setIcon(android.R.drawable.ic_dialog_alert)
-                                            .show();
-                                } else {
-                                    // guardado del token
-                                    _Token = new JSONObject(Result);
-                                    _Share.editPref("_Token", _Token.getString("access_token"), getApplicationContext());
-                                    _Share.editPref("_User", _Datos.getString("username"), getApplicationContext());
-                                    Thread.sleep(500);
-                                    Intent myIntent = new Intent(v.getContext(), Maps.class);
-                                    startActivity(myIntent);
+                                try {
+                                    _Datos.put("username", _User.getText().toString());
+                                    _Datos.put("password",_Hash.MD5_Hash(_Share.getPref("_Pass",getApplicationContext())));
+                                    _Datos.put("school", _Share.getPref("Escuela", getApplicationContext()));
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
                                 }
 
-                            } catch (JSONException e) {
-                                e.printStackTrace();
-                            } catch (IOException e) {
-                                e.printStackTrace();
-                            } catch (InterruptedException e) {
-                                e.printStackTrace();
+                                try {
+
+                                    String Result = _Server.postContent(_Server.get_Login(), _Datos);
+                                    Thread.sleep(500);
+
+                                    if (Result == null) {
+                                        new AlertDialog.Builder(Login.this)
+                                                .setTitle("Error!")
+                                                .setMessage("Invalid username or password")
+                                                .setNeutralButton("Continue", new DialogInterface.OnClickListener() {
+                                                    public void onClick(DialogInterface dialog, int which) {
+                                                        _User.setText("");
+                                                        _Password.setText("");
+
+                                                    }
+                                                })
+                                                .setIcon(android.R.drawable.ic_dialog_alert)
+                                                .show();
+                                    } else {
+                                        // guardado del token
+                                        _Token = new JSONObject(Result);
+                                        _Share.editPref("_Token", _Token.getString("access_token"), getApplicationContext());
+                                        _Share.editPref("_User", _Datos.getString("username"), getApplicationContext());
+                                        Thread.sleep(500);
+                                        Intent myIntent = new Intent(v.getContext(), Maps.class);
+                                        startActivity(myIntent);
+                                        finish();
+                                    }
+
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                } catch (IOException e) {
+                                    e.printStackTrace();
+                                } catch (InterruptedException e) {
+                                    e.printStackTrace();
+                                }
                             }
-                        }
+
+
+
+
+
+
                     }
                 }
         );
@@ -133,6 +164,7 @@ public class Login extends ActionBarActivity {
                     public void onClick(View v) {
                         Intent myIntent = new Intent(v.getContext(), forgot_password.class);
                         startActivity(myIntent);
+                        finish();
                     }
                 });
     }
@@ -142,7 +174,6 @@ public class Login extends ActionBarActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_login, menu);
         return true;
     }
@@ -150,16 +181,10 @@ public class Login extends ActionBarActivity {
     @Override
 
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             return true;
         }
-
         return super.onOptionsItemSelected(item);
     }
 

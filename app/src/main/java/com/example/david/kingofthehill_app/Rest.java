@@ -27,17 +27,22 @@ import java.security.NoSuchAlgorithmException;
  * Clase para administracion de REST
  */
 public class Rest {
+    private final String _IP="http://192.168.1.135:8080";
+    private final String _Registrar=_IP+"/KingOfTheHill/webresources/users/register";
+    private final String _Login=_IP+"http://192.168.1.135:8080/KingOfTheHill/webresources/users/login";
+    private final String _Forgot=_IP+"http://192.168.1.135:8080/KingOfTheHill/webresources/users/forgotpassword";
+    private final String _NewPass=_IP+"http://192.168.1.135:8080/KingOfTheHill/webresources/users/setpassword";
+    private final String _Logout=_IP+"http://192.168.1.135:8080/KingOfTheHill/webresources/users/logout";
+    private final String _Battle=_IP+"http://192.168.1.135:8080/KingOfTheHill/webresources/mobile/checkbattle";
+    private final String _SendPos=_IP+"http://192.168.1.135:8080/KingOfTheHill/webresources/mobile/send-position";
+    private final String _Zones=_IP+"http://192.168.1.135:8080/KingOfTheHill/webresources/zones/retrieve-zones";
+    private final String _ActPos=_IP+"http://192.168.1.135:8080/KingOfTheHill/webresources/mobile/retrieve-position";
+    private final String _SendPoints=_IP+"http://192.168.1.135:8080/KingOfTheHill/webresources/mobile/sendresult";
+    private final String _CheckServer=_IP+"http://192.168.1.135:8080/KingOfTheHill/webresources/mobile/check";
 
-    private final String _Registrar="http://192.168.1.135:8080/KingOfTheHill/webresources/users/register";
-    private final String _Login="http://192.168.1.135:8080/KingOfTheHill/webresources/users/login";
-    private final String _Forgot="http://192.168.1.135:8080/KingOfTheHill/webresources/users/forgotpassword";
-    private final String _NewPass="http://192.168.1.135:8080/KingOfTheHill/webresources/users/setpassword";
-    private final String _Logout="http://192.168.1.135:8080/KingOfTheHill/webresources/users/logout";
-    private final String _Battle="http://192.168.1.135:8080/KingOfTheHill/webresources/mobile/checkbattle";
-    private final String _SendPos="http://192.168.1.135:8080/KingOfTheHill/webresources/mobile/send-position";
-    private final String _Zones="http://192.168.1.135:8080/KingOfTheHill/webresources/zones/retrieve-zones";
-    private final String _ActPos="http://192.168.1.135:8080/KingOfTheHill/webresources/mobile/retrieve-position";
-    private final String _SendPoints="http://192.168.1.135:8080/KingOfTheHill/webresources/mobile/sendresult";
+
+
+
     public Rest() {
         HotFix();
     }
@@ -119,9 +124,9 @@ public class Rest {
         HttpClient httpclient = new DefaultHttpClient();
         String result = null;
         InputStream instream = null;
+
         try {
-            //httppost.addHeader("access_token", "FuckingToken");
-            //httppost.addHeader("expires_int", "3600");
+
             HttpPost httppost = new HttpPost(pUrl);
             StringEntity params = new StringEntity(pJson.toString());
             httppost.addHeader("content-type", "application/json");
@@ -280,6 +285,15 @@ public class Rest {
     public String get_SendPoints(){
         return _SendPoints;
     }
+
+    /**
+     *
+     * @return _CheckServer
+     */
+    public String get_CheckServer() {
+        return _CheckServer;
+    }
+
 
     /**
      * Metodo para corregir incompatibilidad con versiones de android mayores a 3.0

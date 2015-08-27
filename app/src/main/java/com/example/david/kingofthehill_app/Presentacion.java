@@ -19,19 +19,19 @@ import java.io.IOException;
 
 
 public class Presentacion extends ActionBarActivity {
-    private ImageView _Image;
-    private Button _Continue;
-    private AnimationDrawable anim = (AnimationDrawable) _Image.getBackground();
+    private Boolean _Running=true;
+    private AnimationDrawable anim;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_presentacion);
 
 
-        _Image=(ImageView)findViewById(R.id.imageView2);
-        //_Image.setBackgroundResource(R.drawable.pres);
-        //anim.start();
-
+        ImageView _Image=(ImageView)findViewById(R.id.imageView2);
+        _Image.setBackgroundResource(R.drawable.pres);
+        anim = (AnimationDrawable) _Image.getBackground();
+        _Anim.start();
+       // _Change.start();
 
 
 
@@ -39,25 +39,72 @@ public class Presentacion extends ActionBarActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_presentacion, menu);
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
+         int id = item.getItemId();
         if (id == R.id.action_settings) {
             return true;
         }
-
         return super.onOptionsItemSelected(item);
     }
 
+    private Thread _Change=(new Thread(new Runnable() {
+        @Override
+        public void run() {
 
+
+                try {
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+
+                            try {
+                                Thread.sleep(7000);
+                            } catch (InterruptedException e) {
+                                e.printStackTrace();
+                            }
+
+
+
+                        }
+                    });
+                    Thread.sleep(500);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+
+
+        }
+    }));
+    private Thread _Anim=(new Thread(new Runnable() {
+        @Override
+        public void run() {
+
+
+            try {
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+
+
+                        anim.start();
+
+                    }
+                });
+                Thread.sleep(8500);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            Intent myIntent = new Intent(Presentacion.this, Register.class);
+            startActivity(myIntent);
+            finish();
+
+
+
+        }
+    }));
 }

@@ -1,5 +1,7 @@
 package com.example.david.kingofthehill_app;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
@@ -24,6 +26,7 @@ public class formulario extends ActionBarActivity {
     private EditText _Question;
     private EditText _Answer;
     private Button _Register;
+    private Clave _Clave;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,6 +36,7 @@ public class formulario extends ActionBarActivity {
 
         _Datos = new JSONObject( );
         _Server = new Rest();
+        _Clave = new Clave();
         _User = (EditText)findViewById(R.id.editText3);
         _Password = (EditText)findViewById(R.id.editText4);
         _Question = (EditText)findViewById(R.id.editText5);
@@ -44,20 +48,22 @@ public class formulario extends ActionBarActivity {
                 new Button.OnClickListener() {
                     public void onClick(View v) {
 
-                        try {
-                            _Datos.put("username", _User.getText().toString());
-                            _Datos.put("password", MD5_Hash(_Password.getText().toString()));
-                            _Datos.put("question", _Question.getText().toString());
-                            _Datos.put("answer", _Answer.getText().toString());
-                            _Server.postContent(_Server.get_Registrar(), _Datos);
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-                        Intent myIntent = new Intent(v.getContext(), Register.class);
-                        startActivity(myIntent);
-                        finish();
+                            try {
+                                _Datos.put("username", _User.getText().toString());
+                                _Datos.put("password", _Clave.MD5_Hash(_Password.getText().toString()));
+                                _Datos.put("question", _Question.getText().toString());
+                                _Datos.put("answer", _Clave.MD5_Hash(_Answer.getText().toString()));
+                                _Server.postContent(_Server.get_Registrar(), _Datos);
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                            Intent myIntent = new Intent(v.getContext(), Register.class);
+                            startActivity(myIntent);
+                            finish();
+
+
                     }
                 }
         );
@@ -68,19 +74,13 @@ public class formulario extends ActionBarActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_formulario, menu);
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify _Server parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             return true;
         }
@@ -88,22 +88,5 @@ public class formulario extends ActionBarActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    /**
-     * Metodo para hash de contrasena
-     * @param s
-     * @return hash
-     */
-    public static String MD5_Hash(String s) {
-        MessageDigest m = null;
 
-        try {
-            m = MessageDigest.getInstance("MD5");
-        } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
-        }
-
-        m.update(s.getBytes(),0,s.length());
-        String hash = new BigInteger(1, m.digest()).toString(16);
-        return hash;
-    }
 }

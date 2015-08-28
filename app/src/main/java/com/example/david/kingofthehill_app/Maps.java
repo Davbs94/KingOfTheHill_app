@@ -45,6 +45,8 @@ public class Maps extends FragmentActivity {
     private boolean _Running=false;
     private LatLng _Focus=new LatLng(9.8560355, -83.9120774);
     private TextView _Score;
+    private TextView _Altitude;
+    private TextView _Speed;
 
 
     @Override
@@ -66,6 +68,8 @@ public class Maps extends FragmentActivity {
         _Share=new SharedPref();
         _Sig =(ImageView)findViewById(R.id.imageView);
         _Score= (TextView)findViewById(R.id.puntos);
+        _Altitude= (TextView)findViewById(R.id.alt);
+        _Speed= (TextView)findViewById(R.id.spd);
 
 
         //Threads
@@ -350,6 +354,21 @@ public class Maps extends FragmentActivity {
         }
     };
 
+
+    // Handler para modificar la altitud
+    final Handler _HandlerAltitute = new Handler(){
+        @Override
+        public void handleMessage(Message msg) {
+            _Altitude.setText(msg.obj.toString()+" msnm");
+        }
+    };
+
+    final Handler _HandlerSpeed = new Handler(){
+        @Override
+        public void handleMessage(Message msg) {
+            _Speed.setText("Speed: " +msg.obj.toString());
+        }
+    };
     /**
      * Calcula el porcentaje de senal _Wifi
      * @param rssi
@@ -414,9 +433,20 @@ public class Maps extends FragmentActivity {
     public void setLocation(Location location){
         if(location.getLatitude() != 0.0 && location.getLongitude() != 0.0){
             try{
+
                 JSONObject _Pos= new JSONObject();
                 _Pos.put("lat", location.getLatitude());
-                _Pos.put("long",location.getLongitude());
+                _Pos.put("long", location.getLongitude());
+
+                Message Alt = new Message();
+                Alt.obj=Math.round(location.getAltitude());
+                _HandlerAltitute.sendMessage(Alt);
+
+                Message Spd = new Message();
+                Spd.obj=Math.round(location.getSpeed());
+                _HandlerSpeed.sendMessage(Spd);
+
+
                 _Pos.put("username", _Share.getPref("_User", getApplicationContext()));
                 _Server.postContentUser(_Server.get_SendPos(), _Pos, _Share.getPref("_Token", getApplicationContext()));
             } catch (JSONException e) {

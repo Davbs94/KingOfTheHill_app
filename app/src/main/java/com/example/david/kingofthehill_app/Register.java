@@ -2,17 +2,17 @@ package com.example.david.kingofthehill_app;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.StrictMode;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.support.v7.app.ActionBarActivity;
-import android.widget.TextView;
 
 
 public class Register extends ActionBarActivity {
     private SharedPref _Share=new SharedPref();
+    private Button _Register;
+    private Button _Login;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -22,13 +22,13 @@ public class Register extends ActionBarActivity {
         _Share.putPref("_User", "", getApplicationContext());
         _Share.putPref("_Pass", "", getApplicationContext());
         _Share.putPref("_Token", "", getApplicationContext());
-        Button Register= (Button)findViewById(R.id.button2);
-        Button Login= (Button)findViewById(R.id.button1);
+        _Register = (Button)findViewById(R.id.button2);
+        _Login = (Button)findViewById(R.id.button1);
 
 
 
 
-        Register.setOnClickListener(
+        _Register.setOnClickListener(
                 new Button.OnClickListener() {
                     public void onClick(View v) {
                         Intent myIntent = new Intent(v.getContext(), formulario.class);
@@ -37,7 +37,7 @@ public class Register extends ActionBarActivity {
                     }
                 }
         );
-        Login.setOnClickListener(
+        _Login.setOnClickListener(
                 new Button.OnClickListener() {
                     public void onClick(View v) {
                         Intent myIntent = new Intent(v.getContext(), Login.class);

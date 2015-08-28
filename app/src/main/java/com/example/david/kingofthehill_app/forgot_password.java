@@ -24,7 +24,6 @@ public class forgot_password extends ActionBarActivity {
     private EditText _Answer;
     private Rest _Server;
     private Button _Send;
-
     private User _Usuario;
     private JSONObject _Quest;
     private JSONObject _Ans;

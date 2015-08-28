@@ -34,4 +34,22 @@
         android:layout_gravity="center_horizontal"
         android:background="@android:color/background_light" />
 
+    <TextView
+        android:layout_width="95dp"
+        android:layout_height="wrap_content"
+        android:id="@+id/alt"
+        android:layout_gravity="right|top"
+        android:paddingTop="50dp"
+        android:textColorHighlight="@android:color/darker_gray"
+        android:textColor="@android:color/black" />
+
+    <TextView
+        android:layout_width="97dp"
+        android:layout_height="wrap_content"
+        android:id="@+id/spd"
+        android:layout_gravity="right|top"
+        android:paddingTop="70dp"
+        android:textColor="@android:color/black"
+        android:textColorHighlight="@android:color/darker_gray" />
+
 </FrameLayout>

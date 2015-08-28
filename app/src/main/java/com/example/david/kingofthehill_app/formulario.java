@@ -47,21 +47,39 @@ public class formulario extends ActionBarActivity {
         _Register.setOnClickListener(
                 new Button.OnClickListener() {
                     public void onClick(View v) {
+                            if (_Password.getText().length()<6||_User.getText().length()<4){
+                                new AlertDialog.Builder(formulario.this)
+                                        .setTitle("Error!")
+                                        .setMessage("Invalid password or username length")
+                                        .setNeutralButton("Continue", new DialogInterface.OnClickListener() {
+                                            public void onClick(DialogInterface dialog, int which) {
+                                                _User.setText("");
+                                                _Password.setText("");
+                                                _Question.setText("");
+                                                _Answer.setText("");
 
-                            try {
-                                _Datos.put("username", _User.getText().toString());
-                                _Datos.put("password", _Clave.MD5_Hash(_Password.getText().toString()));
-                                _Datos.put("question", _Question.getText().toString());
-                                _Datos.put("answer", _Clave.MD5_Hash(_Answer.getText().toString()));
-                                _Server.postContent(_Server.get_Registrar(), _Datos);
-                            } catch (JSONException e) {
-                                e.printStackTrace();
-                            } catch (IOException e) {
-                                e.printStackTrace();
+                                            }
+                                        })
+                                        .setIcon(android.R.drawable.ic_dialog_alert)
+                                        .show();
                             }
-                            Intent myIntent = new Intent(v.getContext(), Register.class);
-                            startActivity(myIntent);
-                            finish();
+                        else{
+                                try {
+                                    _Datos.put("username", _User.getText().toString());
+                                    _Datos.put("password", _Clave.MD5_Hash(_Password.getText().toString()));
+                                    _Datos.put("question", _Question.getText().toString());
+                                    _Datos.put("answer", _Clave.MD5_Hash(_Answer.getText().toString()));
+                                    _Server.postContent(_Server.get_Registrar(), _Datos);
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                } catch (IOException e) {
+                                    e.printStackTrace();
+                                }
+                                Intent myIntent = new Intent(v.getContext(), Register.class);
+                                startActivity(myIntent);
+                                finish();
+                            }
+
 
 
                     }

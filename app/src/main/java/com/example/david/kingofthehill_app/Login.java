@@ -22,8 +22,6 @@ import org.json.JSONObject;
 public class Login extends ActionBarActivity {
     private EditText _User;
     private EditText _Password;
-
-
     private Rest _Server;
     private JSONObject _Datos;
     private JSONObject _Token;

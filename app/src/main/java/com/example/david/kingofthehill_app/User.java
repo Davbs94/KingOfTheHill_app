@@ -7,7 +7,6 @@ package com.example.david.kingofthehill_app;
 public class User {
     private String username;
     private String password;
-    private String school;
     private String question;
     private String answer;
 

@@ -24,7 +24,7 @@ class MyLocationListener implements LocationListener {
 
     @Override
     public void onLocationChanged(Location location) {
-        String Text = "Ubicacion actual: "+ "\n lat "+location.getLatitude() + "\n long "+location.getLongitude();
+        //String Text = "Ubicacion actual: "+ "\n lat "+location.getLatitude() + "\n long "+location.getLongitude();
 
         if (ingame) {
             this.mainActivity.setLocation(location);

@@ -24,6 +24,8 @@ import com.google.android.gms.maps.model.PolygonOptions;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.TextView;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -42,6 +44,7 @@ public class Maps extends FragmentActivity {
     private  MyLocationListener myLocationListener = new MyLocationListener();
     private boolean _Running=false;
     private LatLng _Focus=new LatLng(9.8560355, -83.9120774);
+    private TextView _Score;
 
 
     @Override
@@ -62,6 +65,7 @@ public class Maps extends FragmentActivity {
         _Server= new Rest();
         _Share=new SharedPref();
         _Sig =(ImageView)findViewById(R.id.imageView);
+        _Score= (TextView)findViewById(R.id.puntos);
 
 
         //Threads
@@ -70,6 +74,7 @@ public class Maps extends FragmentActivity {
         _Cuadros.start();
         _Posicion.start();
         _Check.start();
+        _Puntos.start();
 
 
 
@@ -79,7 +84,7 @@ public class Maps extends FragmentActivity {
                 new Button.OnClickListener() {
                     public void onClick(View v) {
 
-                        _Running=false;
+                        _Running = false;
                         try {
                             Thread.sleep(500);
                         } catch (InterruptedException e) {
@@ -107,10 +112,8 @@ public class Maps extends FragmentActivity {
 
 
         LocationManager mlocManager = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
-
         myLocationListener.setMainActivity(this);
         mlocManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, (LocationListener) myLocationListener);
-
     }
 
     @Override
@@ -155,32 +158,70 @@ public class Maps extends FragmentActivity {
 
             while (_Running) {
                 try {
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            //Codigo para mover posicion
-                            //Cambiar y agregar url
+                    Thread.sleep(2000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        //Codigo para mover posicion
+                        //Cambiar y agregar url
+
+                        String Result = _Server.sendToken(_Server.get_ActPos(), _Share.getPref("_Token", getApplicationContext()));
+                        if (Result != null) {
                             try {
-                                Thread.sleep(500);
-                            } catch (InterruptedException e) {
+                                JSONObject _Coordenadas = new JSONObject(Result);
+                                _Marker.setPosition(new LatLng(_Coordenadas.getDouble("lat"), _Coordenadas.getDouble("long")));
+                                _Marker.setTitle(_Coordenadas.getString("username"));
+                            } catch (JSONException e) {
                                 e.printStackTrace();
                             }
-                            String Result=_Server.sendToken(_Server.get_ActPos(), _Share.getPref("_Token", getApplicationContext()));
-                            if (Result!=null){
-                                try {
-                                    JSONObject _Coordenadas = new JSONObject(Result);
-                                    _Marker.setPosition(new LatLng(_Coordenadas.getDouble("lat"), _Coordenadas.getDouble("long")));
-                                    _Marker.setTitle(_Coordenadas.getString("username"));
-                                } catch (JSONException e) {
-                                    e.printStackTrace();
-                                }
-                            }
-
-
-
                         }
-                    });
+
+
+                    }
+                });
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+
+        }
+    }));
+
+    //Thread para colocar el puntaje
+    private Thread _Puntos=(new Thread(new Runnable() {
+        @Override
+        public void run() {
+
+            while (_Running) {
+                try {
                     Thread.sleep(2000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        String Result = _Server.sendToken(_Server.get_GetPoints(), _Share.getPref("_Token", getApplicationContext()));
+                        JSONObject _Pointjs;
+                        try {
+                            _Pointjs = new JSONObject(Result);
+                            if (Result != null) {
+                                _Score.setText("Score: " + _Pointjs.getString("score"));
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+
+
+                    }
+                });
+                try {
+                    Thread.sleep(1000);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
@@ -193,45 +234,47 @@ public class Maps extends FragmentActivity {
         public void run() {
             while (_Running) {
                 try {
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            try {
-                                Thread.sleep(500);
-                                String Result = _Server.sendToken(_Server.get_Zones(), _Share.getPref("_Token", getApplicationContext()));
-                                if (Result!=null){
-                                    JSONObject Res = new JSONObject(Result);
-                                    JSONArray jsonArray = null;
-                                    jsonArray = Res.getJSONArray("zonas");
-                                    for (int i = 0; i < jsonArray.length(); i++) {
-                                        JSONObject json = jsonArray.getJSONObject(i);
-                                        PolygonOptions b = new PolygonOptions().add(new LatLng(json.getDouble("lat1"), json.getDouble("long1"))
-                                                , new LatLng(json.getDouble("lat1"), json.getDouble("long2"))
-                                                , new LatLng(json.getDouble("lat2"), json.getDouble("long2"))
-                                                , new LatLng(json.getDouble("lat2"), json.getDouble("long1"))).strokeColor(Color.parseColor(json.getString("color")))
-                                                .strokeWidth(1);
-                                        Polygon a = _Map.addPolygon(b);
-                                        a.setStrokeWidth(1);
-                                        a.setFillColor(Color.parseColor(json.getString("color")));
-
-                                    }
-                                }
-
-
-                            } catch (JSONException e) {
-                                e.printStackTrace();
-                            } catch (InterruptedException e) {
-                                e.printStackTrace();
-                            }
-
-                        }
-                    });
                     Thread.sleep(5000);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+
+                            String Result = _Server.sendToken(_Server.get_Zones(), _Share.getPref("_Token", getApplicationContext()));
+                            if (Result != null) {
+                                JSONObject Res = new JSONObject(Result);
+                                JSONArray jsonArray = null;
+                                jsonArray = Res.getJSONArray("zonas");
+                                for (int i = 0; i < jsonArray.length(); i++) {
+                                    JSONObject json = jsonArray.getJSONObject(i);
+                                    PolygonOptions b = new PolygonOptions().add(new LatLng(json.getDouble("lat1"), json.getDouble("long1"))
+                                            , new LatLng(json.getDouble("lat1"), json.getDouble("long2"))
+                                            , new LatLng(json.getDouble("lat2"), json.getDouble("long2"))
+                                            , new LatLng(json.getDouble("lat2"), json.getDouble("long1"))).strokeColor(Color.parseColor(json.getString("color")))
+                                            .strokeWidth(1);
+                                    Polygon a = _Map.addPolygon(b);
+                                    a.setStrokeWidth(1);
+                                    a.setFillColor(Color.parseColor(json.getString("color")));
+
+                                }
+                            }
 
 
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+
+                    }
+                });
+
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
             }
         }
     }));
@@ -244,7 +287,7 @@ public class Maps extends FragmentActivity {
         public void run() {
             while(_Running){
                 try {
-                    Thread.sleep(2000);
+                    Thread.sleep(5000);
                     _Wifi = (WifiManager) getSystemService(Context.WIFI_SERVICE);
                     WifiInfo info = _Wifi.getConnectionInfo();
                     Message msg = _Handler.obtainMessage();
@@ -336,8 +379,7 @@ public class Maps extends FragmentActivity {
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
-
-                    String Result=_Server.sendToken(_Server.get_Battle(), _Share.getPref("_Token", getApplicationContext()));
+                String Result=_Server.sendToken(_Server.get_Battle(), _Share.getPref("_Token", getApplicationContext()));
                 if (Result!=null){
                     try {
                         JSONObject _Bas=new JSONObject(Result);
@@ -349,14 +391,14 @@ public class Maps extends FragmentActivity {
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
-                    try {
-                        Thread.sleep(1000);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
+
                 }
 
-
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
             }
         }
     });
@@ -373,8 +415,6 @@ public class Maps extends FragmentActivity {
         if(location.getLatitude() != 0.0 && location.getLongitude() != 0.0){
             try{
                 JSONObject _Pos= new JSONObject();
-                System.out.print(location.getLatitude());
-                System.out.print(location.getLongitude());
                 _Pos.put("lat", location.getLatitude());
                 _Pos.put("long",location.getLongitude());
                 _Pos.put("username", _Share.getPref("_User", getApplicationContext()));

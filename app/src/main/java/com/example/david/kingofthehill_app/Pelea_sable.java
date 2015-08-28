@@ -8,6 +8,7 @@ import android.hardware.SensorEventListener;
 import android.hardware.SensorListener;
 import android.hardware.SensorManager;
 import android.media.MediaPlayer;
+import android.os.Message;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
@@ -35,7 +36,7 @@ public class Pelea_sable extends ActionBarActivity implements SensorEventListene
     private  float TotalMovement = 0;
     private float TotalMovementAux = 0;
     private Random rand = new Random();
-    private Rest _Server;
+    private Rest _Server= new Rest();
     private SharedPref _Share= new SharedPref();
 
     TextView x,y,z;
@@ -218,24 +219,11 @@ public class Pelea_sable extends ActionBarActivity implements SensorEventListene
                 reproductor.start();
             }
 
-            TotalMovement = 0;
-            TotalMovementAux = 0;
-            JSONObject _Points = new JSONObject();
-            try {
-                _Points.put("points",Float.toString(TotalMovement / 1E-5f));
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-            try {
-                _Server.postContentUser(_Server.get_SendPoints(), _Points, _Share.getPref("_Token", getApplicationContext()));
-                Thread.sleep(3000);
-            } catch (JSONException e) {
-                e.printStackTrace();
-            } catch (IOException e) {
-                e.printStackTrace();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
+           // TotalMovement = 0;
+           // TotalMovementAux = 0;
+
+
+            _Result.start();
             sm.unregisterListener(this, mAccelerometer);
             Intent myIntent = new Intent(Pelea_sable.this, Maps.class);
             startActivity(myIntent);
@@ -257,4 +245,39 @@ public class Pelea_sable extends ActionBarActivity implements SensorEventListene
     public void onAccuracyChanged(int sensor, int accuracy) {
 
     }
+
+
+    private Thread _Result= new Thread(new Runnable() {
+        public void run() {
+
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            try {
+
+                String Cochinada="{ 'points':" +Float.toString(TotalMovement / 1E-5f)+"}";
+                JSONObject _Points = new JSONObject(Cochinada);
+                //float A= (float) 0.00001;
+                //float Puntos=TotalMovement /A;
+                //_Points.put("points", Puntos);
+
+
+                _Server.postContentUser(_Server.get_SendPoints(), _Points, _Share.getPref("_Token", getApplicationContext()));
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+
+            } catch (JSONException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+        }
+    });
 }
+

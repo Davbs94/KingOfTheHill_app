@@ -39,6 +39,7 @@ public class Rest {
     private final String _ActPos=_IP+"mobile/retrieve-position";
     private final String _SendPoints=_IP+"mobile/sendresult";
     private final String _CheckServer=_IP+"mobile/check";
+    private final String _GetPoints= _IP+"mobile/score";
 
 
 
@@ -292,6 +293,14 @@ public class Rest {
      */
     public String get_CheckServer() {
         return _CheckServer;
+    }
+
+    /**
+     *
+     * @return _GetPoints
+     */
+    public String get_GetPoints() {
+        return _GetPoints;
     }
 
 

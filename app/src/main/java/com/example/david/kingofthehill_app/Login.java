@@ -53,23 +53,6 @@ public class Login extends ActionBarActivity {
         _Escuelas.setText(SharedPref.getPref("Escuela", getApplicationContext()));
         String _On= _Server.getContent(_Server.get_CheckServer());
 
-        if (_On.equals("rekt")){
-            new AlertDialog.Builder(Login.this)
-                    .setTitle("Error!")
-                    .setMessage("Server not found")
-                    .setNeutralButton("Continue", new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int which) {
-                            _User.setText(SharedPref.getPref("_User", getApplicationContext()));
-                            _Password.setText("");
-                            Intent myIntent = new Intent(Login.this, Register.class);
-                            startActivity(myIntent);
-                            finish();
-
-                        }
-                    })
-                    .setIcon(android.R.drawable.ic_dialog_alert)
-                    .show();
-        }
 
         _Escuelas.setOnClickListener(
                 new Button.OnClickListener() {

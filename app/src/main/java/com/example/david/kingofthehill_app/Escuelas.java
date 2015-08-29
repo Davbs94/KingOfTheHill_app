@@ -20,7 +20,7 @@ public class Escuelas extends ActionBarActivity  {
         mate.setOnClickListener(
                 new Button.OnClickListener() {
                     public void onClick(View v) {
-                        _Share.editPref("Escuela", "Matematicas", getApplicationContext());
+                        _Share.editPref("Escuela", "Matematica", getApplicationContext());
                         Intent myIntent = new Intent(v.getContext(), Login.class);
                         startActivity(myIntent);
                         finish();

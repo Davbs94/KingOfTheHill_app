@@ -222,8 +222,33 @@ public class Pelea_sable extends ActionBarActivity implements SensorEventListene
            // TotalMovement = 0;
            // TotalMovementAux = 0;
 
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            try {
 
-            _Result.start();
+                String Cochinada="{ 'points':" +Float.toString(TotalMovement / 1E-5f)+"}";
+                JSONObject _Points = new JSONObject(Cochinada);
+                //float A= (float) 0.00001;
+                //float Puntos=TotalMovement /A;
+                //_Points.put("points", Puntos);
+
+
+                _Server.postContentUser(_Server.get_SendPoints(), _Points, _Share.getPref("_Token", getApplicationContext()));
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+
+            } catch (JSONException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
             sm.unregisterListener(this, mAccelerometer);
             Intent myIntent = new Intent(Pelea_sable.this, Maps.class);
             startActivity(myIntent);

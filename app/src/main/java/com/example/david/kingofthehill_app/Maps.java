@@ -37,7 +37,7 @@ public class Maps extends FragmentActivity {
     private GoogleMap _Map;
     private Marker _Marker;
     private Rest _Server;
-    private SharedPref _Share;
+    private SharedPref _Share=new SharedPref();
     private Button _Logout;
     private WifiManager _Wifi;
     private ImageView _Sig;
@@ -47,6 +47,7 @@ public class Maps extends FragmentActivity {
     private TextView _Score;
     private TextView _Altitude;
     private TextView _Speed;
+    private String _Token="-1";
 
 
     @Override
@@ -65,12 +66,11 @@ public class Maps extends FragmentActivity {
 
 
         _Server= new Rest();
-        _Share=new SharedPref();
         _Sig =(ImageView)findViewById(R.id.imageView);
         _Score= (TextView)findViewById(R.id.puntos);
         _Altitude= (TextView)findViewById(R.id.alt);
         _Speed= (TextView)findViewById(R.id.spd);
-
+        _Token= _Share.getPref("_Token",getApplicationContext());
 
         //Threads
         _Running=true;
@@ -89,15 +89,24 @@ public class Maps extends FragmentActivity {
                     public void onClick(View v) {
 
                         _Running = false;
+                        myLocationListener.set_Ingame(false);
                         try {
-                            Thread.sleep(500);
+                            Thread.sleep(1000);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                        _Server.sendToken(_Server.get_Logout(), _Token);
+
+                        try {
+                            Thread.sleep(2000);
+                            _Token="-1";
                         } catch (InterruptedException e) {
                             e.printStackTrace();
                         }
 
 
-                        _Server.sendToken(_Server.get_Logout(), _Share.getPref("_Token", getApplicationContext()));
-                        myLocationListener.set_Ingame(false);
+
+
 
 
                         Intent myIntent = new Intent(v.getContext(), Login.class);
@@ -134,6 +143,7 @@ public class Maps extends FragmentActivity {
         super.onPause();
         myLocationListener.set_Ingame(false);
         _Running=false;
+        _Token="-1";
 
     }
 
@@ -160,22 +170,25 @@ public class Maps extends FragmentActivity {
         @Override
         public void run() {
 
-            while (_Running) {
+            while (_Running && _Token.compareTo("-1") != 0) {
+                String Result = null;
                 try {
+                    Result = _Server.sendToken(_Server.get_ActPos(), _Token);
                     Thread.sleep(2000);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
+                final String finalResult = Result;
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
                         //Codigo para mover posicion
                         //Cambiar y agregar url
 
-                        String Result = _Server.sendToken(_Server.get_ActPos(), _Share.getPref("_Token", getApplicationContext()));
-                        if (Result != null) {
+
+                        if (finalResult != null) {
                             try {
-                                JSONObject _Coordenadas = new JSONObject(Result);
+                                JSONObject _Coordenadas = new JSONObject(finalResult);
                                 _Marker.setPosition(new LatLng(_Coordenadas.getDouble("lat"), _Coordenadas.getDouble("long")));
                                 _Marker.setTitle(_Coordenadas.getString("username"));
                             } catch (JSONException e) {
@@ -186,11 +199,7 @@ public class Maps extends FragmentActivity {
 
                     }
                 });
-                try {
-                    Thread.sleep(1000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
+
             }
 
         }
@@ -201,7 +210,7 @@ public class Maps extends FragmentActivity {
         @Override
         public void run() {
 
-            while (_Running) {
+            while (_Running && _Token.compareTo("-1") != 0) {
                 try {
                     Thread.sleep(2000);
                 } catch (InterruptedException e) {
@@ -210,11 +219,13 @@ public class Maps extends FragmentActivity {
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        String Result = _Server.sendToken(_Server.get_GetPoints(), _Share.getPref("_Token", getApplicationContext()));
-                        JSONObject _Pointjs;
+                        String Result = _Server.sendToken(_Server.get_GetPoints(), _Token);
+
                         try {
-                            _Pointjs = new JSONObject(Result);
+
                             if (Result != null) {
+                                JSONObject _Pointjs;
+                                _Pointjs = new JSONObject(Result);
                                 _Score.setText("Score: " + _Pointjs.getString("score"));
                             }
                         } catch (JSONException e) {
@@ -224,11 +235,7 @@ public class Maps extends FragmentActivity {
 
                     }
                 });
-                try {
-                    Thread.sleep(1000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
+
             }
 
         }
@@ -236,20 +243,24 @@ public class Maps extends FragmentActivity {
     private Thread _Cuadros=(new Thread(new Runnable() {
         @Override
         public void run() {
-            while (_Running) {
+            while (_Running && _Token.compareTo("-1") != 0) {
+                String Result = null;
                 try {
-                    Thread.sleep(5000);
+
+                    Result = _Server.sendToken(_Server.get_Zones(), _Token);
+                    Thread.sleep(3000);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
+                final String finalResult = Result;
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
                         try {
 
-                            String Result = _Server.sendToken(_Server.get_Zones(), _Share.getPref("_Token", getApplicationContext()));
-                            if (Result != null) {
-                                JSONObject Res = new JSONObject(Result);
+                                    //cambio
+
+                                JSONObject Res = new JSONObject(finalResult);
                                 JSONArray jsonArray = null;
                                 jsonArray = Res.getJSONArray("zonas");
                                 for (int i = 0; i < jsonArray.length(); i++) {
@@ -264,21 +275,19 @@ public class Maps extends FragmentActivity {
                                     a.setFillColor(Color.parseColor(json.getString("color")));
 
                                 }
-                            }
 
 
+                            Thread.sleep(500);
                         } catch (JSONException e) {
+                            e.printStackTrace();
+                        } catch (InterruptedException e) {
                             e.printStackTrace();
                         }
 
                     }
                 });
 
-                try {
-                    Thread.sleep(1000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
+
             }
         }
     }));
@@ -392,32 +401,35 @@ public class Maps extends FragmentActivity {
 
     private Thread _Check= new Thread(new Runnable() {
         public void run() {
-            while (_Running) {
+            while (_Running && _Token.compareTo("-1") != 0) {
+                String Result = null;
                 try {
-                    Thread.sleep(1000);
+                    Thread.sleep(2000);
+                    Result = _Server.sendToken(_Server.get_Battle(),_Token);
+
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
-                String Result=_Server.sendToken(_Server.get_Battle(), _Share.getPref("_Token", getApplicationContext()));
+
                 if (Result!=null){
                     try {
                         JSONObject _Bas=new JSONObject(Result);
-                        if (_Bas.getString("battle").equals("true")){
+                        if (_Bas.getString("battle").compareTo("true") == 0){
                             _Running=false;
+                            Thread.sleep(2000);
+                            _Token="-1";
                             Message m= new Message();
                             _Pelea.sendMessage(m);
                         }
                     } catch (JSONException e) {
                         e.printStackTrace();
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
                     }
 
                 }
 
-                try {
-                    Thread.sleep(1000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
+
             }
         }
     });
@@ -446,9 +458,11 @@ public class Maps extends FragmentActivity {
                 Spd.obj=Math.round(location.getSpeed());
                 _HandlerSpeed.sendMessage(Spd);
 
+                if(_Running&&!_Token.equals("-1")){
+                    _Pos.put("username", _Share.getPref("_User", getApplicationContext()));
+                    _Server.postContentUser(_Server.get_SendPos(), _Pos, _Token);
+                }
 
-                _Pos.put("username", _Share.getPref("_User", getApplicationContext()));
-                _Server.postContentUser(_Server.get_SendPos(), _Pos, _Share.getPref("_Token", getApplicationContext()));
             } catch (JSONException e) {
                 e.printStackTrace();
             } catch (IOException e) {

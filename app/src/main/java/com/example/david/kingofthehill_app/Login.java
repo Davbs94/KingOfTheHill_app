@@ -116,7 +116,7 @@ public class Login extends ActionBarActivity {
                                         _Token = new JSONObject(Result);
                                         _Share.editPref("_Token", _Token.getString("access_token"), getApplicationContext());
                                         _Share.editPref("_User", _Datos.getString("username"), getApplicationContext());
-                                        Thread.sleep(500);
+                                        Thread.sleep(1500);
                                         Intent myIntent = new Intent(v.getContext(), Maps.class);
                                         startActivity(myIntent);
                                         finish();
